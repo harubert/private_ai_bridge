@@ -1,0 +1,70 @@
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+
+Copyright (c) 2026 Thomas Schroffenegger, MSc MAS BEd
+
+This license applies to all documentation, the website (web/), example data
+(examples/), the README, and the conceptual framework documented in this
+repository.
+
+═══════════════════════════════════════════════════════════════════════════
+                      DEUTSCHE ZUSAMMENFASSUNG
+═══════════════════════════════════════════════════════════════════════════
+
+Du darfst:
+  ✓ TEILEN — das Material in jedwedem Format oder Medium vervielfältigen
+    und weiterverbreiten
+  ✓ BEARBEITEN — das Material remixen, verändern und darauf aufbauen,
+    auch kommerziell
+
+Unter folgenden Bedingungen:
+
+  ① NAMENSNENNUNG — Du musst angemessene Urheber- und Rechteangaben machen,
+     einen Link zur Lizenz beifügen und angeben, ob Änderungen vorgenommen
+     wurden.
+
+     Empfohlene Zitierweise:
+     "private-ai-bridge" von Thomas Schroffenegger, MSc MAS BEd, lizenziert
+     unter CC BY-SA 4.0 — https://github.com/harubert/private_ai_bridge
+
+  ② WEITERGABE UNTER GLEICHEN BEDINGUNGEN — Wenn du das Material remixt,
+     veränderst oder darauf aufbaust, musst du deine Beiträge unter
+     derselben Lizenz wie das Original verbreiten.
+
+  ③ KEINE WEITEREN EINSCHRÄNKUNGEN — Du darfst keine zusätzlichen Klauseln
+     oder technischen Verfahren einsetzen, die anderen rechtlich etwas
+     untersagen, was die Lizenz erlaubt.
+
+═══════════════════════════════════════════════════════════════════════════
+                      OFFIZIELLER LIZENZTEXT
+═══════════════════════════════════════════════════════════════════════════
+
+Der vollständige rechtsverbindliche Lizenztext ist abrufbar unter:
+
+  https://creativecommons.org/licenses/by-sa/4.0/legalcode.de  (Deutsch)
+  https://creativecommons.org/licenses/by-sa/4.0/legalcode.en  (Englisch)
+
+Die menschenlesbare Zusammenfassung (Commons Deed) findest du unter:
+
+  https://creativecommons.org/licenses/by-sa/4.0/deed.de
+
+═══════════════════════════════════════════════════════════════════════════
+                      WAS UNTER DIESER LIZENZ STEHT
+═══════════════════════════════════════════════════════════════════════════
+
+Diese Lizenz (CC BY-SA 4.0) gilt für:
+  • README.md und alle anderen Markdown-Dokumentationsdateien
+  • Inhalte im Verzeichnis web/ (HTML, CSS, JavaScript zur Darstellung,
+    Texte, grafische Konzepte)
+  • Inhalte im Verzeichnis examples/ (Beispieldaten und -aufgaben)
+  • Das hier dokumentierte Konzept und Architekturmodell
+
+Für den Source-Code der Anwendung (server/, install.sh) gilt eine separate
+Lizenz — siehe LICENSE-CODE (MIT).
+
+═══════════════════════════════════════════════════════════════════════════
+
+HAFTUNGSAUSSCHLUSS
+
+Das Material wird "wie besehen" zur Verfügung gestellt, ohne ausdrückliche
+oder stillschweigende Gewährleistung jeglicher Art. Der Lizenzgeber
+übernimmt keine Haftung für Schäden, die aus der Verwendung entstehen.

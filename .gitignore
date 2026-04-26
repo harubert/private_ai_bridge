@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Lokale Daten — enthalten echte Zuordnungen!
+~/.private-ai-bridge/
+*.lookup.json
+*.audit.log

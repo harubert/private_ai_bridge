@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "private-ai-bridge": {
+      "command": "python3",
+      "args": ["-m", "server"],
+      "cwd": "/Applications/XAMPP/xamppfiles/htdocs/private-ai-bridge",
+      "env": {
+        "PRIVATE_AI_BRIDGE_MODEL": "gemma4:e4b"
+      }
+    }
+  }
+}

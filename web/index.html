@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>private-ai-bridge — DSGVO-konforme KI mit Claude Code &amp; Gemma</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="topnav">
+    <div class="container">
+        <a href="index.html" class="brand"><span class="brand-mark"></span>private-ai-bridge</a>
+        <div class="links">
+            <a href="index.html" class="active">Konzept</a>
+            <a href="demo.html">Demo</a>
+            <a href="flow.html">Datenfluss</a>
+            <a href="https://github.com">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <h1>Sensible Daten lokal verarbeiten — <span class="gradient">Cloud-KI nutzen ohne Datenleck</span></h1>
+    <p class="tagline">
+        Ein Framework für Claude Code, das personenbezogene Daten ausschließlich auf deinem Rechner verarbeitet.
+        Lokales LLM (Gemma) bleibt Wächter, Claude bekommt nur anonymisierte Aggregate.
+    </p>
+    <div class="cta">
+        <a href="demo.html" class="btn btn-primary">Live-Demo ansehen</a>
+        <a href="#konzept" class="btn btn-secondary">So funktioniert's</a>
+    </div>
+</header>
+
+<section id="konzept">
+    <div class="container">
+        <h2>Die Architektur</h2>
+        <p class="subtitle">
+            Drei Akteure, klar getrennt: User und lokales LLM kennen die echten Daten.
+            Cloud-KI bekommt nur anonymisierte Aggregate.
+        </p>
+
+        <div class="arch-diagram">
+            <div class="arch-flow">
+                <div class="arch-node user">
+                    <span class="badge">Mensch</span>
+                    <div class="icon">👤</div>
+                    <div class="label">User</div>
+                    <div class="sublabel">Stellt Aufgabe</div>
+                </div>
+
+                <div class="arch-arrow">→</div>
+
+                <div class="arch-node local">
+                    <span class="badge">Lokal</span>
+                    <div class="icon">🛡️</div>
+                    <div class="label">Gemma 4</div>
+                    <div class="sublabel">Liest sensible Daten<br>Aggregiert / pseudonymisiert</div>
+                </div>
+
+                <div class="arch-arrow">→</div>
+
+                <div class="arch-node cloud">
+                    <span class="badge">Cloud</span>
+                    <div class="icon">☁️</div>
+                    <div class="label">Claude Code</div>
+                    <div class="sublabel">Bekommt nur<br>anonymisierte Daten</div>
+                </div>
+
+                <div class="arch-arrow">←</div>
+
+                <div class="arch-node local">
+                    <span class="badge">Lokal</span>
+                    <div class="icon">🔓</div>
+                    <div class="label">Re-Mapping</div>
+                    <div class="sublabel">Tokens zurück<br>in Klartext</div>
+                </div>
+            </div>
+
+            <div class="arch-legend">
+                <div class="legend-item"><span class="legend-dot user"></span> Sieht alle echten Daten</div>
+                <div class="legend-item"><span class="legend-dot local"></span> Sieht alle echten Daten (lokal)</div>
+                <div class="legend-item"><span class="legend-dot cloud"></span> Sieht nur anonymisierte Aggregate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <h2>Wieso überhaupt Claude? Wieso nicht alles lokal?</h2>
+        <p class="subtitle">
+            Berechtigte Frage. Die ehrliche Antwort: Spezialisierung. Lokale und Cloud-KI sind nicht gleich gut —
+            sie sind in verschiedenen Dingen brillant.
+        </p>
+
+        <div class="comparison" style="margin-top: 2rem;">
+            <div class="comparison-card" style="background: var(--local-light); border-color: var(--local);">
+                <h3>🛡️ Was Gemma 4 lokal gut kann</h3>
+                <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    ~4 Milliarden Parameter, läuft auf 16 GB RAM. Optimiert für strukturierte Aufgaben.
+                </p>
+                <ul style="list-style: none; font-size: 0.92rem;">
+                    <li style="padding: 0.4rem 0;">✓ Daten aus Dateien <strong>extrahieren</strong></li>
+                    <li style="padding: 0.4rem 0;">✓ Felder <strong>filtern</strong> und anonymisieren</li>
+                    <li style="padding: 0.4rem 0;">✓ Personenbezüge <strong>erkennen</strong></li>
+                    <li style="padding: 0.4rem 0;">✓ Einfache Texte aus Vorlagen <strong>befüllen</strong></li>
+                    <li style="padding: 0.4rem 0;">✓ Aggregate berechnen (Durchschnitt, Anzahl)</li>
+                </ul>
+            </div>
+
+            <div class="comparison-card" style="background: var(--cloud-light); border-color: var(--cloud);">
+                <h3>☁️ Was Claude (Cloud) viel besser kann</h3>
+                <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    ~200+ Milliarden Parameter, riesige Trainingsbasis. Spezialisiert auf komplexe Aufgaben.
+                </p>
+                <ul style="list-style: none; font-size: 0.92rem;">
+                    <li style="padding: 0.4rem 0;">✓ <strong>Strategisches Planen</strong> mit vielen Constraints</li>
+                    <li style="padding: 0.4rem 0;">✓ <strong>Kreatives Schreiben</strong> (Briefe, Anträge, Berichte)</li>
+                    <li style="padding: 0.4rem 0;">✓ <strong>Strukturiertes Reasoning</strong> über komplexe Sachverhalte</li>
+                    <li style="padding: 0.4rem 0;">✓ <strong>Code-Generierung</strong> und Refactoring</li>
+                    <li style="padding: 0.4rem 0;">✓ <strong>Domänenwissen</strong> (Recht, Pädagogik, Verwaltung)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-elevated); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; border-left: 4px solid var(--primary);">
+            <h3 style="font-size: 1.05rem; margin-bottom: 0.5rem;">💡 Die Analogie</h3>
+            <p style="color: var(--text); font-size: 0.95rem; line-height: 1.7;">
+                <strong>Gemma</strong> ist wie ein <strong>Anwaltsgehilfe</strong>: kennt die Akten, sortiert,
+                schwärzt sensible Stellen, fasst zusammen.<br>
+                <strong>Claude</strong> ist wie ein <strong>spezialisierter Anwalt</strong>: bekommt die geschwärzten
+                Akten und schreibt darauf basierend strategisch durchdachte Plädoyers.
+            </p>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.8rem;">
+                Niemand würde sagen "schick einfach den Anwaltsgehilfen vor Gericht" — beide haben ihre Rolle.
+                Die Cloud-KI ist nicht ersetzbar bei strategischen Aufgaben. Aber sie braucht keinen Zugriff
+                auf identifizierende Daten, um diese Aufgaben zu lösen.
+            </p>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Konkretes Beispiel: Wintersportwoche</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; text-align: left;">
+                <div style="background: var(--local-light); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid var(--local);">
+                    <strong style="color: var(--local); font-size: 0.85rem;">Gemma macht:</strong>
+                    <p style="font-size: 0.88rem; margin-top: 0.3rem;">
+                        Schülerdaten lesen → anonymisieren → Eltern-Brief mit Vorlage befüllen → Notfall-Liste
+                        ausdrucken
+                    </p>
+                </div>
+                <div style="background: var(--cloud-light); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid var(--cloud);">
+                    <strong style="color: var(--cloud); font-size: 0.85rem;">Claude macht:</strong>
+                    <p style="font-size: 0.88rem; margin-top: 0.3rem;">
+                        Optimale Gruppeneinteilung mit Niveau- und Größen-Constraints, Brief-Vorlagen formulieren,
+                        komplette Förderanträge mit Begründung schreiben
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="background: var(--bg-elevated);">
+    <div class="container">
+        <h2>Zwei Ansätze, ein Ziel</h2>
+        <p class="subtitle">
+            Das Framework bietet zwei Strategien, je nach Aufgabe und Datensensibilität.
+        </p>
+
+        <div class="comparison">
+            <div class="comparison-card good">
+                <h3>🛡️ Delegation an Gemma</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.92rem;">
+                    Claude weiß: "Da liegen sensible Daten, die ich nicht sehen darf." Es ruft Gemma als Tool auf — Gemma liest die Datei lokal, verarbeitet sie und gibt nur Aggregate zurück.
+                </p>
+                <ul>
+                    <li>Sensible Datei nie in Cloud</li>
+                    <li>Aggregate (Durchschnitt, Anzahl) sind sicher</li>
+                    <li>Klare Audit-Spur</li>
+                    <li>Permission-System verhindert Bypass</li>
+                </ul>
+            </div>
+
+            <div class="comparison-card good">
+                <h3>🔄 Pseudonymisierung</h3>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.92rem;">
+                    Wenn Claude doch mit Personen-Kontext arbeiten muss: Lokales Mapping ersetzt Namen durch Tokens wie <code>[PERS_a3f2]</code>. Claude arbeitet damit, lokal wird zurückübersetzt.
+                </p>
+                <ul>
+                    <li>Klarnamen bleiben lokal</li>
+                    <li>Claude versteht Person-Kontext</li>
+                    <li>Reversibel über lokale Lookup-Tabelle</li>
+                    <li>Leak-Detector als Sicherheitsnetz</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <h2>Was das Framework liefert</h2>
+        <p class="subtitle">
+            Ein MCP-Server für Claude Code mit sechs Tools.
+        </p>
+
+        <div class="features">
+            <div class="feature">
+                <div class="icon">🔍</div>
+                <h3>gemma_query</h3>
+                <p>Lässt das lokale LLM eine Datei verarbeiten und gibt nur das anonymisierte Ergebnis an Claude zurück.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🎭</div>
+                <h3>pseudonymize</h3>
+                <p>Ersetzt echte Namen, E-Mails, Telefonnummern durch stabile Tokens. Lokale Lookup-Tabelle.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🔓</div>
+                <h3>depseudonymize</h3>
+                <p>Wandelt Tokens zurück in Klartext. Claude liefert Pseudo-Antwort, du siehst echte Namen.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">📋</div>
+                <h3>show_mappings</h3>
+                <p>Zeigt die aktuelle Zuordnungstabelle: welcher echte Wert wurde welchem Token zugewiesen.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">📜</div>
+                <h3>show_audit_log</h3>
+                <p>Vollständiges Audit-Log aller Verarbeitungen — DSGVO Art. 30 konform.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">⚙️</div>
+                <h3>system_status</h3>
+                <p>Status der lokalen Ollama-Installation und verfügbarer Modelle.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="background: var(--bg-elevated);">
+    <div class="container">
+        <h2>Schnellstart</h2>
+        <p class="subtitle">In drei Schritten startklar.</p>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h3 style="font-size: 1rem; margin: 1.5rem 0 0.5rem; color: var(--text-muted);">1. Repository klonen</h3>
+            <pre><code>git clone https://github.com/harubert/private_ai_bridge.git
+cd private_ai_bridge</code></pre>
+
+            <h3 style="font-size: 1rem; margin: 1.5rem 0 0.5rem; color: var(--text-muted);">2. Installer ausführen (testet Hardware, lädt passendes Gemma-Modell)</h3>
+            <pre><code>./install.sh</code></pre>
+
+            <h3 style="font-size: 1rem; margin: 1.5rem 0 0.5rem; color: var(--text-muted);">3. Claude Code in diesem Verzeichnis starten</h3>
+            <pre><code>claude</code></pre>
+
+            <p style="text-align: center; margin-top: 2rem; color: var(--text-muted); font-size: 0.95rem;">
+                Der MCP-Server wird automatisch erkannt. Sechs neue Tools stehen Claude zur Verfügung.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container" style="text-align: center;">
+        <h2>Sieh es in Aktion</h2>
+        <p class="subtitle">
+            Schritt-für-Schritt-Demo am Beispiel <strong>Wintersportwoche organisieren</strong>:
+            7 Schüler mit Sportwahl, Allergien, Medikamenten und Sozialermäßigungen.
+            Echte Verwaltungsaufgabe, transparenter Datenfluss.
+        </p>
+        <a href="demo.html" class="btn btn-primary">Zur Demo →</a>
+        <a href="flow.html" class="btn btn-secondary">Datenfluss visualisiert</a>
+    </div>
+</section>
+
+<section style="background: var(--bg-elevated);">
+    <div class="container" style="max-width: 800px;">
+        <h2>Über dieses Projekt</h2>
+        <div style="background: var(--bg); border-radius: 12px; padding: 2rem; border-left: 4px solid var(--primary);">
+            <p style="font-size: 0.95rem; line-height: 1.7;">
+                <strong>private-ai-bridge</strong> ist eine technische Veröffentlichung von
+                <strong>Thomas Schroffenegger, MSc MAS BEd</strong> — entstanden aus der praktischen Notwendigkeit,
+                Claude Code im österreichischen Schulalltag DSGVO-konform einzusetzen.
+            </p>
+            <p style="font-size: 0.95rem; line-height: 1.7; margin-top: 1rem; color: var(--text-muted);">
+                Das Konzept und die Referenzimplementierung stehen als Open Source unter MIT-Lizenz zur freien
+                Nutzung, Adaption und Weiterentwicklung. Anwendungsbereich weit über das Schulwesen hinaus:
+                überall dort, wo personenbezogene Daten anfallen, die nicht in die Cloud dürfen — Personalwesen,
+                Gesundheitsbereich, Recht, Beratung, Sozialarbeit.
+            </p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <strong>Konzept &amp; Realisierung:</strong> Thomas Schroffenegger, MSc MAS BEd<br>
+                <strong>Erstveröffentlichung:</strong> April 2026<br>
+                <strong>Lizenz:</strong> MIT (Code) + CC BY-SA 4.0 (Konzept) — beide mit Namensnennung<br>
+                <strong>Repository:</strong> <a href="https://github.com">github.com/harubert/private_ai_bridge</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="links">
+            <a href="index.html">Konzept</a>
+            <a href="demo.html">Demo</a>
+            <a href="flow.html">Datenfluss</a>
+            <a href="https://github.com">GitHub</a>
+        </div>
+        <p>
+            <strong>private-ai-bridge</strong> — eine technische Veröffentlichung von Thomas Schroffenegger, MSc MAS BEd<br>
+            Open Source · MIT (Code) + CC BY-SA 4.0 (Konzept) · DSGVO-konform
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>

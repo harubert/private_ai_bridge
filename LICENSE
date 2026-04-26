@@ -1,0 +1,24 @@
+private-ai-bridge nutzt eine duale Lizenzierung:
+
+═══════════════════════════════════════════════════════════════════════
+  CODE         →   MIT License           (siehe LICENSE-CODE)
+  DOKUMENTATION →  CC BY-SA 4.0          (siehe LICENSE-DOCS)
+═══════════════════════════════════════════════════════════════════════
+
+Im Detail:
+
+CODE — MIT License
+  Gilt für: server/, install.sh, alle .py-Dateien
+  Frei nutzbar, modifizierbar, weiterverbreitbar (auch kommerziell).
+  Bedingung: Copyright-Hinweis muss in allen Kopien enthalten bleiben.
+  Volltext: LICENSE-CODE
+
+DOKUMENTATION & KONZEPT — Creative Commons BY-SA 4.0
+  Gilt für: README.md, web/, examples/, alle .md-Dateien, Konzeptdoku
+  Frei nutzbar, modifizierbar, weiterverbreitbar (auch kommerziell).
+  Bedingungen:
+    1. Namensnennung: Thomas Schroffenegger, MSc MAS BEd
+    2. Weitergabe unter gleichen Bedingungen (Share-Alike)
+  Volltext: LICENSE-DOCS
+
+Copyright (c) 2026 Thomas Schroffenegger, MSc MAS BEd

@@ -1,0 +1,259 @@
+[
+  {
+    "id": 1,
+    "vorname": "Anna",
+    "nachname": "Bauer",
+    "geschlecht": "w",
+    "geburtsdatum": "12.05.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Lindenweg 14",
+      "plz": "8010",
+      "ort": "Graz"
+    },
+    "email": "anna.bauer@beispielschule.at",
+    "telefon_eltern": "+43 664 7654321",
+    "erziehungsberechtigte": [
+      {"name": "Maria Bauer", "telefon": "+43 664 7654321", "email": "maria.bauer@gmail.com"}
+    ],
+    "wintersport": {
+      "sportwahl": "ski",
+      "niveau": "fortgeschritten",
+      "eigene_ausruestung": true,
+      "helmgroesse": "S",
+      "schuhgroesse": 38
+    },
+    "gesundheit": {
+      "allergien": ["Nüsse"],
+      "medikamente": [],
+      "notfallkontakt": {"name": "Maria Bauer", "telefon": "+43 664 7654321", "verhaeltnis": "Mutter"},
+      "krankenkasse": "ÖGK",
+      "sonstiges": "Allergie kann zu Atemnot führen, Notfall-Pen im Gepäck"
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": false
+    },
+    "schwimmabzeichen": "Freischwimmer"
+  },
+  {
+    "id": 2,
+    "vorname": "Lukas",
+    "nachname": "Huber",
+    "geschlecht": "m",
+    "geburtsdatum": "23.09.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Bahnhofstraße 47",
+      "plz": "8020",
+      "ort": "Graz"
+    },
+    "email": "lukas.huber@beispielschule.at",
+    "telefon_eltern": "+43 660 1112233",
+    "erziehungsberechtigte": [
+      {"name": "Thomas Huber", "telefon": "+43 660 1112233", "email": "thomas.huber@gmx.at"},
+      {"name": "Stefanie Huber", "telefon": "+43 676 4445566", "email": "stefanie.huber@gmx.at"}
+    ],
+    "wintersport": {
+      "sportwahl": "snowboard",
+      "niveau": "fortgeschritten",
+      "eigene_ausruestung": true,
+      "helmgroesse": "M",
+      "schuhgroesse": 41
+    },
+    "gesundheit": {
+      "allergien": [],
+      "medikamente": ["Ritalin 10mg morgens"],
+      "notfallkontakt": {"name": "Thomas Huber", "telefon": "+43 660 1112233", "verhaeltnis": "Vater"},
+      "krankenkasse": "ÖGK",
+      "sonstiges": "ADHS, Medikament regelmäßig vor Frühstück"
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": false
+    },
+    "schwimmabzeichen": "Freischwimmer"
+  },
+  {
+    "id": 3,
+    "vorname": "Sophie",
+    "nachname": "Müller",
+    "geschlecht": "w",
+    "geburtsdatum": "07.02.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Rosenstraße 8",
+      "plz": "8041",
+      "ort": "Graz"
+    },
+    "email": "sophie.mueller@beispielschule.at",
+    "telefon_eltern": "+43 699 5544332",
+    "erziehungsberechtigte": [
+      {"name": "Andreas Müller", "telefon": "+43 699 8877665", "email": "a.mueller@aon.at"}
+    ],
+    "wintersport": {
+      "sportwahl": "ski",
+      "niveau": "anfaenger",
+      "eigene_ausruestung": false,
+      "helmgroesse": "S",
+      "schuhgroesse": 37,
+      "leihausruestung_benoetigt": ["Ski", "Skischuhe", "Helm"]
+    },
+    "gesundheit": {
+      "allergien": [],
+      "medikamente": [],
+      "notfallkontakt": {"name": "Andreas Müller", "telefon": "+43 699 8877665", "verhaeltnis": "Vater"},
+      "krankenkasse": "ÖGK",
+      "sonstiges": ""
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": false
+    },
+    "schwimmabzeichen": "Freischwimmer"
+  },
+  {
+    "id": 4,
+    "vorname": "Yusuf",
+    "nachname": "Demir",
+    "geschlecht": "m",
+    "geburtsdatum": "30.11.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Wienerstraße 102",
+      "plz": "8020",
+      "ort": "Graz"
+    },
+    "email": "yusuf.demir@beispielschule.at",
+    "telefon_eltern": "+43 680 2233445",
+    "erziehungsberechtigte": [
+      {"name": "Mehmet Demir", "telefon": "+43 680 2233445", "email": "m.demir@outlook.com"}
+    ],
+    "wintersport": {
+      "sportwahl": "alternativ",
+      "niveau": null,
+      "eigene_ausruestung": false,
+      "alternativ_grund": "Erstmals in den Bergen, Familie hat keine Skierfahrung"
+    },
+    "gesundheit": {
+      "allergien": [],
+      "medikamente": [],
+      "notfallkontakt": {"name": "Mehmet Demir", "telefon": "+43 680 2233445", "verhaeltnis": "Vater"},
+      "krankenkasse": "ÖGK",
+      "sonstiges": "Halal-Verpflegung erforderlich"
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": true,
+      "begruendung": "Familie mit drei Kindern, alleinverdienender Vater"
+    },
+    "schwimmabzeichen": "Frühschwimmer"
+  },
+  {
+    "id": 5,
+    "vorname": "Emma",
+    "nachname": "Steiner",
+    "geschlecht": "w",
+    "geburtsdatum": "18.07.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Gartenstraße 23",
+      "plz": "8010",
+      "ort": "Graz"
+    },
+    "email": "emma.steiner@beispielschule.at",
+    "telefon_eltern": "+43 664 6677889",
+    "erziehungsberechtigte": [
+      {"name": "Christine Steiner", "telefon": "+43 664 6677889", "email": "christine.steiner@gmail.com"},
+      {"name": "Markus Steiner", "telefon": "+43 660 5566778", "email": "markus.steiner@gmail.com"}
+    ],
+    "wintersport": {
+      "sportwahl": "ski",
+      "niveau": "anfaenger",
+      "eigene_ausruestung": false,
+      "helmgroesse": "S",
+      "schuhgroesse": 38,
+      "leihausruestung_benoetigt": ["Ski", "Skischuhe", "Helm"]
+    },
+    "gesundheit": {
+      "allergien": ["Laktose"],
+      "medikamente": [],
+      "notfallkontakt": {"name": "Christine Steiner", "telefon": "+43 664 6677889", "verhaeltnis": "Mutter"},
+      "krankenkasse": "BVAEB",
+      "sonstiges": "Laktoseintoleranz, laktosefreie Verpflegung"
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": false
+    },
+    "schwimmabzeichen": "Freischwimmer"
+  },
+  {
+    "id": 6,
+    "vorname": "Felix",
+    "nachname": "Wagner",
+    "geschlecht": "m",
+    "geburtsdatum": "04.04.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Mozartgasse 5",
+      "plz": "8042",
+      "ort": "Graz-Andritz"
+    },
+    "email": "felix.wagner@beispielschule.at",
+    "telefon_eltern": "+43 676 9988776",
+    "erziehungsberechtigte": [
+      {"name": "Birgit Wagner", "telefon": "+43 676 9988776", "email": "birgit.wagner@gmx.at"}
+    ],
+    "wintersport": {
+      "sportwahl": "snowboard",
+      "niveau": "anfaenger",
+      "eigene_ausruestung": false,
+      "helmgroesse": "M",
+      "schuhgroesse": 40,
+      "leihausruestung_benoetigt": ["Snowboard", "Snowboardschuhe", "Helm"]
+    },
+    "gesundheit": {
+      "allergien": [],
+      "medikamente": ["Asthma-Spray bei Belastung"],
+      "notfallkontakt": {"name": "Birgit Wagner", "telefon": "+43 676 9988776", "verhaeltnis": "Mutter"},
+      "krankenkasse": "ÖGK",
+      "sonstiges": "Belastungsasthma, Spray ist immer dabei"
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": true,
+      "begruendung": "Alleinerziehende Mutter"
+    },
+    "schwimmabzeichen": "Freischwimmer"
+  },
+  {
+    "id": 7,
+    "vorname": "Mia",
+    "nachname": "Fischer",
+    "geschlecht": "w",
+    "geburtsdatum": "27.10.2012",
+    "klasse": "3a",
+    "adresse": {
+      "strasse": "Schillerstraße 19",
+      "plz": "8045",
+      "ort": "Graz-Puntigam"
+    },
+    "email": "mia.fischer@beispielschule.at",
+    "telefon_eltern": "+43 699 3322110",
+    "erziehungsberechtigte": [
+      {"name": "Sabine Fischer", "telefon": "+43 699 3322110", "email": "sabine.fischer@aon.at"}
+    ],
+    "wintersport": {
+      "sportwahl": "alternativ",
+      "niveau": null,
+      "eigene_ausruestung": false,
+      "alternativ_grund": "Knieverletzung im Herbst, ärztliches Attest verbietet Schneesport"
+    },
+    "gesundheit": {
+      "allergien": [],
+      "medikamente": ["Voltaren-Salbe bei Bedarf"],
+      "notfallkontakt": {"name": "Sabine Fischer", "telefon": "+43 699 3322110", "verhaeltnis": "Mutter"},
+      "krankenkasse": "ÖGK",
+      "sonstiges": "Knieverletzung in Heilung, kein Skifahren erlaubt - aber Wandern, Schlitten, Schwimmen ok"
+    },
+    "finanzielles": {
+      "ermaessigung_beantragt": false
+    },
+    "schwimmabzeichen": "Freischwimmer"
+  }
+]

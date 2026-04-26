@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datenfluss — private-ai-bridge</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .flow-canvas {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            min-height: 600px;
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            min-height: 400px;
+            position: relative;
+        }
+
+        .zone-label {
+            position: absolute;
+            top: -12px;
+            left: 1rem;
+            background: var(--bg-elevated);
+            padding: 0 0.6rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .zone.user-zone { border-color: var(--text); }
+        .zone.user-zone .zone-label { color: var(--text); }
+
+        .zone.local-zone { border-color: var(--local); background: var(--local-light); }
+        .zone.local-zone .zone-label { color: var(--local); }
+
+        .zone.cloud-zone { border-color: var(--cloud); background: var(--cloud-light); }
+        .zone.cloud-zone .zone-label { color: var(--cloud); }
+
+        .zone-icon {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .zone-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .zone-desc {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .data-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            margin: 0.3rem 0;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .data-item.sensitive {
+            border-left: 3px solid var(--danger);
+        }
+
+        .data-item.safe {
+            border-left: 3px solid var(--local);
+        }
+
+        .data-item.token {
+            border-left: 3px solid var(--warning);
+            font-family: monospace;
+        }
+
+        .data-icon {
+            opacity: 0.6;
+        }
+
+        /* Scenarios */
+        .scenarios {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .scenario {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .scenario h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario .strategy {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .scenario .arrow-flow {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            margin: 0.5rem 0;
+        }
+
+        .scenario .arrow-flow .step {
+            background: #f3f4f6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .scenario .arrow-flow .step.local { background: var(--local-light); color: var(--local); }
+        .scenario .arrow-flow .step.cloud { background: var(--cloud-light); color: var(--cloud); }
+
+        /* Legend table */
+        .legend-table {
+            width: 100%;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .legend-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .legend-table th {
+            background: #f9fafb;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .legend-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .legend-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-cell {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-local { background: var(--local-light); color: var(--local); }
+        .badge-cloud { background: var(--cloud-light); color: var(--cloud); }
+        .badge-user { background: #f3f4f6; color: var(--text); }
+        .badge-block { background: var(--danger-light); color: var(--danger); }
+
+        .flow-arrow-down {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin: 1rem 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .tl-event {
+            position: relative;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tl-event::before {
+            content: '';
+            position: absolute;
+            left: -1.7rem;
+            top: 1.4rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--text-muted);
+        }
+
+        .tl-event.user::before { border-color: var(--text); }
+        .tl-event.local::before { border-color: var(--local); }
+        .tl-event.cloud::before { border-color: var(--cloud); }
+        .tl-event.block::before { border-color: var(--danger); background: var(--danger); }
+
+        .tl-event .actor {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.4rem;
+        }
+
+        .tl-event .actor.user { background: #f3f4f6; color: var(--text); }
+        .tl-event .actor.local { background: var(--local-light); color: var(--local); }
+        .tl-event .actor.cloud { background: var(--cloud-light); color: var(--cloud); }
+        .tl-event .actor.block { background: var(--danger-light); color: var(--danger); }
+
+        .tl-event h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .tl-event p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .flow-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topnav">
+    <div class="container">
+        <a href="index.html" class="brand"><span class="brand-mark"></span>private-ai-bridge</a>
+        <div class="links">
+            <a href="index.html">Konzept</a>
+            <a href="demo.html">Demo</a>
+            <a href="flow.html" class="active">Datenfluss</a>
+            <a href="https://github.com">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero" style="padding: 3rem 2rem 2rem;">
+    <h1 style="font-size: 2.2rem;">Datenfluss-Visualisierung</h1>
+    <p class="tagline">
+        Welche Daten bleiben lokal, welche dürfen zur Cloud?
+        Hier die komplette Transparenz für jeden Datentyp.
+    </p>
+</header>
+
+<section style="padding-top: 1rem;">
+    <div class="container">
+
+        <!-- DREI ZONEN -->
+        <h2>Die drei Datenzonen</h2>
+        <p class="subtitle">
+            Jede Information lebt in genau einer Zone — und kann nur durch definierte Übergänge wechseln.
+        </p>
+
+        <div class="flow-canvas">
+            <div class="flow-grid">
+                <div class="zone user-zone">
+                    <span class="zone-label">Zone 1</span>
+                    <div class="zone-icon">👤</div>
+                    <div class="zone-title">User-Bereich</div>
+                    <div class="zone-desc">Browser, Terminal, Editor</div>
+                    <div class="data-item sensitive">
+                        <span class="data-icon">📝</span> Klartext-Aufgabe
+                    </div>
+                    <div class="data-item safe">
+                        <span class="data-icon">✨</span> Finales Ergebnis
+                    </div>
+                    <div class="data-item">
+                        <span class="data-icon">📊</span> Audit-Log lesbar
+                    </div>
+                </div>
+
+                <div class="zone local-zone">
+                    <span class="zone-label">Zone 2 — LOKAL</span>
+                    <div class="zone-icon">🛡️</div>
+                    <div class="zone-title">private-ai-bridge + Gemma</div>
+                    <div class="zone-desc">Auf deinem Rechner</div>
+                    <div class="data-item sensitive">
+                        <span class="data-icon">🔒</span> JSON mit Klarnamen
+                    </div>
+                    <div class="data-item sensitive">
+                        <span class="data-icon">📞</span> Telefonnummern
+                    </div>
+                    <div class="data-item sensitive">
+                        <span class="data-icon">📧</span> E-Mail-Adressen
+                    </div>
+                    <div class="data-item sensitive">
+                        <span class="data-icon">🏠</span> Adressen
+                    </div>
+                    <div class="data-item">
+                        <span class="data-icon">🗂️</span> Lookup-Tabelle
+                    </div>
+                    <div class="data-item">
+                        <span class="data-icon">📜</span> Audit-Log
+                    </div>
+                </div>
+
+                <div class="zone cloud-zone">
+                    <span class="zone-label">Zone 3 — CLOUD</span>
+                    <div class="zone-icon">☁️</div>
+                    <div class="zone-title">Claude API</div>
+                    <div class="zone-desc">Anthropic-Server</div>
+                    <div class="data-item safe">
+                        <span class="data-icon">📊</span> Aggregate (Schnitte)
+                    </div>
+                    <div class="data-item safe">
+                        <span class="data-icon">📈</span> Statistiken (Anzahl)
+                    </div>
+                    <div class="data-item token">
+                        <span class="data-icon">🎭</span> Tokens [PERS_a3f2]
+                    </div>
+                    <div class="data-item safe">
+                        <span class="data-icon">📝</span> Generierter Text
+                    </div>
+                </div>
+            </div>
+
+            <div class="arch-legend" style="border-top: none; padding-top: 0;">
+                <div class="legend-item"><span class="legend-dot" style="background:var(--danger);"></span> Sensible Daten — bleiben in Zone 2</div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--local);"></span> Sichere Daten — dürfen in Zone 3</div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--warning);"></span> Tokens — sicher, aber rückübersetzbar</div>
+            </div>
+        </div>
+
+        <!-- WAS IST WAS -->
+        <h2 style="margin-top: 4rem;">Was ist sensibel?</h2>
+        <p class="subtitle">
+            Die Klassifizierung jeder Datenkategorie nach Sicherheitsstufe.
+        </p>
+
+        <div class="legend-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kategorie</th>
+                        <th>Stufe</th>
+                        <th>Behandlung</th>
+                        <th>Token-Format</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Vor- und Nachname</strong></td>
+                        <td><span class="badge-cell badge-block">L1 — Direkt identifizierend</span></td>
+                        <td>Immer pseudonymisieren oder weglassen</td>
+                        <td><code>[PERS_a3f2]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>E-Mail-Adresse</strong></td>
+                        <td><span class="badge-cell badge-block">L1 — Direkt identifizierend</span></td>
+                        <td>Immer pseudonymisieren</td>
+                        <td><code>[EMAIL_b7c1]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telefonnummer</strong></td>
+                        <td><span class="badge-cell badge-block">L1 — Direkt identifizierend</span></td>
+                        <td>Immer pseudonymisieren</td>
+                        <td><code>[TEL_d9e4]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Postadresse (Straße + Nr)</strong></td>
+                        <td><span class="badge-cell badge-block">L1 — Direkt identifizierend</span></td>
+                        <td>Immer pseudonymisieren</td>
+                        <td><code>[ADDR_e1f2]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>SVNr</strong></td>
+                        <td><span class="badge-cell badge-block">L1 — Direkt identifizierend</span></td>
+                        <td>Niemals an Cloud — auch nicht pseudonymisiert</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Geburtsdatum</strong></td>
+                        <td><span class="badge-cell badge-cloud">L2 — Quasi-identifizierend</span></td>
+                        <td>Alleine OK; mit Klasse + Schule = L1</td>
+                        <td><code>[GEB_a1b2]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>PLZ + Ort</strong></td>
+                        <td><span class="badge-cell badge-cloud">L2 — Quasi-identifizierend</span></td>
+                        <td>Bei kleinen Orten pseudonymisieren</td>
+                        <td><code>[ORT_c3d4]</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Noten</strong></td>
+                        <td><span class="badge-cell badge-cloud">L3 — Sensibel im Kontext</span></td>
+                        <td>OK ohne Personenzuordnung</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bemerkungen (LRS, ADHS)</strong></td>
+                        <td><span class="badge-cell badge-cloud">L3 — Sensibel im Kontext</span></td>
+                        <td>OK ohne Personenzuordnung</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Klassendurchschnitt</strong></td>
+                        <td><span class="badge-cell badge-local">L4 — Aggregiert</span></td>
+                        <td>Unbedenklich</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anzahl Schüler</strong></td>
+                        <td><span class="badge-cell badge-local">L4 — Aggregiert</span></td>
+                        <td>Unbedenklich</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TIMELINE FÜR DEMO-AUFGABE -->
+        <h2 style="margin-top: 4rem;">Zeitlicher Ablauf: Wintersportwoche planen</h2>
+        <p class="subtitle">
+            Was passiert in welcher Reihenfolge — und wer sieht was?
+        </p>
+
+        <div class="timeline">
+            <div class="tl-event user">
+                <span class="actor user">User</span>
+                <h4>00:00 — Aufgabe gestellt</h4>
+                <p>"Plane die Wintersportwoche der 3a — Gruppen, Begleiter, Notfall-Datenblätter, Eltern-Briefe."</p>
+            </div>
+
+            <div class="tl-event cloud">
+                <span class="actor cloud">Claude</span>
+                <h4>00:01 — Klassifiziert die Teilaufgaben</h4>
+                <p>Logistik (Gruppen, Bus) → ich kann das. Notfall-Datenblätter, Eltern-Briefe → nur lokal!</p>
+            </div>
+
+            <div class="tl-event local">
+                <span class="actor local">Gemma 4 lokal</span>
+                <h4>00:02 — Liest sensible Datei</h4>
+                <p>Volle Schülerdaten mit Allergien, Medikamenten, Adressen, Familienverhältnissen.</p>
+            </div>
+
+            <div class="tl-event local">
+                <span class="actor local">Gemma 4 lokal</span>
+                <h4>00:08 — Erstellt anonymisierte Logistik-Profile</h4>
+                <p>Nur Sportwahl, Niveau, Größen, Flags ("allergie_ja_nein"). Keine spezifischen Allergien.</p>
+            </div>
+
+            <div class="tl-event block">
+                <span class="actor block">Leak-Check</span>
+                <h4>00:08 — Sicherheits-Scan</h4>
+                <p>Prüft: enthält Gemmas Output Klarnamen oder spezifische Allergien? Falls ja → blockiert.</p>
+            </div>
+
+            <div class="tl-event cloud">
+                <span class="actor cloud">Claude API</span>
+                <h4>00:09 — Plant Logistik</h4>
+                <p>Bildet 4 Gruppen, weist Begleitlehrer zu, erstellt Bus-Sitzplan, Leihausrüstungs-Liste.</p>
+            </div>
+
+            <div class="tl-event local">
+                <span class="actor local">Gemma 4 lokal</span>
+                <h4>00:15 — Generiert Notfall-Datenblatt</h4>
+                <p>Mit echten Namen, Allergien, Medikamenten, Notfallkontakten. Nur für Begleitlehrer.</p>
+            </div>
+
+            <div class="tl-event local">
+                <span class="actor local">Gemma 4 lokal</span>
+                <h4>00:25 — Generiert 7 personalisierte Eltern-Briefe</h4>
+                <p>Mit echten Namen, individueller Packliste je nach Sportwahl, Hinweis auf Förderantrag.</p>
+            </div>
+
+            <div class="tl-event local">
+                <span class="actor local">private-ai-bridge</span>
+                <h4>00:30 — Mappt Logistik-Pläne zu Namen</h4>
+                <p>Claudes Gruppen-Plan (mit IDs) wird lokal mit echten Namen aufgelöst.</p>
+            </div>
+
+            <div class="tl-event user">
+                <span class="actor user">User</span>
+                <h4>00:31 — Komplettes Paket</h4>
+                <p>4 Gruppen, Bus-Plan, Notfall-Liste, 7 Eltern-Briefe, 2 Förderanträge — druckfertig.</p>
+            </div>
+        </div>
+
+        <!-- SZENARIEN -->
+        <h2 style="margin-top: 4rem;">Strategien je nach Aufgabe</h2>
+        <p class="subtitle">
+            Nicht jede Aufgabe braucht denselben Schutz. Drei typische Szenarien:
+        </p>
+
+        <div class="scenarios">
+            <div class="scenario">
+                <h3>📊 Logistik / Aggregate</h3>
+                <div class="strategy">Strategie: Delegation an Gemma</div>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+                    "Bilde Gruppen, plane Bus-Sitzplan, berechne Leihausrüstung"
+                </p>
+                <div class="arrow-flow">
+                    <span class="step local">Gemma liest + extrahiert Felder</span> →
+                    <span class="step cloud">Claude plant Logistik mit IDs</span>
+                </div>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--local);">
+                    ✓ Claude sieht nur Sportwahl/Niveau, keine Identitäten
+                </p>
+            </div>
+
+            <div class="scenario">
+                <h3>🚑 Sensible Dokumente</h3>
+                <div class="strategy">Strategie: Komplett lokal</div>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+                    "Notfall-Datenblatt mit Allergien, Medikamenten, Notfallkontakten"
+                </p>
+                <div class="arrow-flow">
+                    <span class="step local">Gemma generiert Dokument</span> →
+                    <span class="step local">Direkt zum User</span>
+                </div>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--local);">
+                    ✓ Claude sieht NICHTS — auch nicht Aufgabe oder Ergebnis
+                </p>
+            </div>
+
+            <div class="scenario">
+                <h3>📨 Personalisierte Texte</h3>
+                <div class="strategy">Strategie: Lokal + Vorlage von Claude</div>
+                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+                    "Eltern-Briefe mit individueller Packliste je nach Sportwahl"
+                </p>
+                <div class="arrow-flow">
+                    <span class="step cloud">Claude schreibt Vorlage</span> →
+                    <span class="step local">Gemma füllt mit echten Daten</span>
+                </div>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--local);">
+                    ✓ Claude liefert nur Template, Namen kommen lokal rein
+                </p>
+            </div>
+        </div>
+
+        <!-- WAS GEHT NICHT -->
+        <h2 style="margin-top: 4rem;">Wo das Framework an Grenzen stößt</h2>
+        <p class="subtitle">
+            Ehrlichkeit über die Limitierungen.
+        </p>
+
+        <div class="features">
+            <div class="feature" style="border-left: 4px solid var(--warning);">
+                <div class="icon">⚠️</div>
+                <h3>Lokale Performance</h3>
+                <p>
+                    Gemma 4 E4B braucht ~6 GB RAM und ist langsamer als Cloud-Claude. Bei sehr großen Datenmengen
+                    kann die lokale Verarbeitung Minuten dauern.
+                </p>
+            </div>
+            <div class="feature" style="border-left: 4px solid var(--warning);">
+                <div class="icon">⚠️</div>
+                <h3>Gemmas Sprachfähigkeit</h3>
+                <p>
+                    Gemma ist gut, aber nicht so kreativ wie Claude. Anonymisierung und Aggregation klappt
+                    zuverlässig, komplexe Schreibaufgaben besser an Claude delegieren.
+                </p>
+            </div>
+            <div class="feature" style="border-left: 4px solid var(--warning);">
+                <div class="icon">⚠️</div>
+                <h3>Halluzinationen möglich</h3>
+                <p>
+                    Selbst mit Leak-Check kann Gemma in Edge-Cases PII halluzinieren oder durchsickern lassen.
+                    Wichtige Daten zusätzlich über Permission-Deny absichern.
+                </p>
+            </div>
+            <div class="feature" style="border-left: 4px solid var(--warning);">
+                <div class="icon">⚠️</div>
+                <h3>Vertrauen in den User</h3>
+                <p>
+                    Wenn der User Klardaten direkt in den Prompt tippt, ist das Framework machtlos.
+                    Optional kann ein UserPromptSubmit-Hook nachgerüstet werden.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section style="text-align: center; background: var(--bg-elevated);">
+    <div class="container">
+        <h2>Bereit loszulegen?</h2>
+        <p class="subtitle">
+            Klone das Repo, führe den Installer aus, starte Claude Code.
+        </p>
+        <a href="https://github.com" class="btn btn-primary">Auf GitHub →</a>
+        <a href="demo.html" class="btn btn-secondary">Demo nochmal ansehen</a>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="links">
+            <a href="index.html">Konzept</a>
+            <a href="demo.html">Demo</a>
+            <a href="flow.html">Datenfluss</a>
+            <a href="https://github.com">GitHub</a>
+        </div>
+        <p>
+            <strong>private-ai-bridge</strong> — eine technische Veröffentlichung von Thomas Schroffenegger, MSc MAS BEd<br>
+            Open Source · MIT (Code) + CC BY-SA 4.0 (Konzept) · DSGVO-konform
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>

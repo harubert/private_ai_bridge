@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo: Wintersportwoche planen — private-ai-bridge</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Zwei-Spalten-Layout: links = lokal, rechts = cloud */
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .lane {
+            padding: 1.5rem 1.5rem;
+            min-height: 100px;
+        }
+
+        .lane.local {
+            background: var(--local-light);
+            border-right: 2px solid var(--local);
+        }
+
+        .lane.cloud {
+            background: var(--cloud-light);
+        }
+
+        .lane-header {
+            position: sticky;
+            top: 60px;
+            background: inherit;
+            padding: 0.8rem 1.5rem;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .lane.local .lane-header {
+            background: var(--local-light);
+            color: var(--local);
+            border-bottom-color: var(--local);
+        }
+
+        .lane.cloud .lane-header {
+            background: var(--cloud-light);
+            color: var(--cloud);
+            border-bottom-color: var(--cloud);
+        }
+
+        .lane-header .icon {
+            font-size: 1.2rem;
+            margin-right: 0.4rem;
+        }
+
+        /* Schritt-Block */
+        .block {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .block .step-num {
+            display: inline-block;
+            background: var(--text);
+            color: white;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .lane.local .block .step-num { background: var(--local); }
+        .lane.cloud .block .step-num { background: var(--cloud); }
+
+        .block h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .block .desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin: 0.6rem 0 1rem 0;
+            line-height: 1.5;
+        }
+
+        /* Excel-ähnliche Tabellen */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .data-table th {
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 0.5rem 0.6rem;
+            text-align: left;
+            border-bottom: 2px solid #cbd5e1;
+            border-right: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .data-table th:last-child { border-right: none; }
+
+        .data-table td {
+            padding: 0.4rem 0.6rem;
+            border-bottom: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            vertical-align: top;
+        }
+
+        .data-table td:last-child { border-right: none; }
+        .data-table tr:last-child td { border-bottom: none; }
+
+        .data-table tr:hover td { background: #fafbfc; }
+
+        .data-table td.id-cell {
+            font-family: "SF Mono", Monaco, monospace;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-align: center;
+            background: #f8fafc;
+            width: 40px;
+        }
+
+        .data-table.compact { font-size: 0.74rem; }
+        .data-table.compact th, .data-table.compact td { padding: 0.3rem 0.5rem; }
+
+        .real-name {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .pseudo-id {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 700;
+            font-family: "SF Mono", Monaco, monospace;
+        }
+
+        .badge-yes { background: #fee2e2; color: #991b1b; padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; }
+        .badge-no { background: #d1fae5; color: #065f46; padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: 700; }
+
+        /* Lookup-Tabelle hervorheben */
+        .lookup-block {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .lookup-block h3 {
+            color: #78350f;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lookup-block .desc {
+            color: #92400e;
+        }
+
+        .lookup-table {
+            background: white;
+            border-radius: 6px;
+        }
+
+        /* Datenfluss-Pfeile */
+        .flow-arrow {
+            background: white;
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border: 1px dashed var(--border);
+            position: relative;
+        }
+
+        .flow-arrow::before {
+            content: "↓";
+            font-size: 1.2rem;
+            color: var(--local);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .lane.cloud .flow-arrow::before { color: var(--cloud); }
+
+        .flow-arrow strong { color: var(--text); }
+
+        /* Crossover: Pfeil von links nach rechts (Daten gehen zur Cloud) */
+        .crossover-section {
+            grid-column: 1 / -1;
+            background: white;
+            border-top: 2px solid var(--border);
+            border-bottom: 2px solid var(--border);
+            padding: 1.5rem 2rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .crossover-section.to-cloud {
+            background: linear-gradient(90deg, var(--local-light), var(--cloud-light));
+        }
+
+        .crossover-section.from-cloud {
+            background: linear-gradient(90deg, var(--cloud-light), var(--local-light));
+        }
+
+        .crossover-arrow {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .crossover-content {
+            text-align: center;
+        }
+
+        .crossover-content strong {
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .crossover-content small {
+            color: var(--text-muted);
+        }
+
+        /* Hauptaufgabe + Endergebnis: über volle Breite */
+        .full-width-block {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin: 1.5rem 1.5rem;
+            border: 2px solid var(--text);
+        }
+
+        .full-width-block.user-input {
+            background: linear-gradient(135deg, #f9fafb, #ffffff);
+            border-color: var(--text);
+        }
+
+        .full-width-block.final-output {
+            background: linear-gradient(135deg, #f5f3ff, #ffffff);
+            border-color: #7c3aed;
+        }
+
+        .full-width-block h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .full-width-block .badge-actor {
+            display: inline-block;
+            background: var(--text);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.8rem;
+        }
+
+        .full-width-block.final-output .badge-actor {
+            background: #7c3aed;
+        }
+
+        /* Zusammenfassung */
+        .summary {
+            background: linear-gradient(135deg, var(--primary), #7c3aed);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 1.5rem;
+        }
+        .summary h2 { color: white; margin-bottom: 1rem; }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .summary-stat .num {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+        .summary-stat .lbl {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Wer-sieht-was Tabelle */
+        .visibility-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+        }
+
+        .visibility-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .visibility-table th {
+            background: #f8fafc;
+            padding: 0.8rem;
+            text-align: left;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .visibility-table td {
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .visibility-table tr:last-child td { border-bottom: none; }
+
+        .check-yes { color: var(--local); font-weight: 700; }
+        .check-no { color: var(--danger); font-weight: 700; }
+
+        @media (max-width: 900px) {
+            .split { grid-template-columns: 1fr; }
+            .lane.local { border-right: none; border-bottom: 2px solid var(--local); }
+            .lane-header { position: static; }
+            .crossover-section { flex-direction: column; }
+            .full-width-block, .summary { margin: 1.5rem 1rem; }
+            .data-table { font-size: 0.72rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="topnav">
+    <div class="container">
+        <a href="index.html" class="brand"><span class="brand-mark"></span>private-ai-bridge</a>
+        <div class="links">
+            <a href="index.html">Konzept</a>
+            <a href="demo.html" class="active">Demo</a>
+            <a href="flow.html">Datenfluss</a>
+            <a href="https://github.com">GitHub</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero" style="padding: 3rem 2rem 2rem;">
+    <h1 style="font-size: 2.2rem;">Live-Demo: Wintersportwoche planen</h1>
+    <p class="tagline">
+        Linke Spalte = <strong style="color:var(--local);">privat auf deinem Rechner</strong>.
+        Rechte Spalte = <strong style="color:var(--cloud);">Cloud / Claude</strong>.
+        Verfolge, welche Daten wo bleiben.
+    </p>
+</header>
+
+<!-- USER AUFGABE (volle Breite) -->
+<div class="full-width-block user-input">
+    <span class="badge-actor">👤 User: Direktorin</span>
+    <h2>Aufgabe: Wintersportwoche der 3a planen (15.-19.02.2026, Schladming)</h2>
+    <p style="color: var(--text-muted); margin-top: 0.5rem;">
+        Benötigt: Gruppeneinteilung (Sportwahl + Niveau), Begleitlehrer-Plan, Bus-Sitzplan,
+        Notfall-Datenblätter, personalisierte Eltern-Anschreiben, Förderanträge für Familien
+        mit beantragter Ermäßigung.
+    </p>
+</div>
+
+<!-- ZWEISPALTIGES LAYOUT -->
+<div class="split">
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- LINKS: LOKAL                                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="lane local">
+        <div class="lane-header">
+            <span class="icon">🛡️</span>LOKAL — Auf deinem Rechner
+        </div>
+
+        <!-- Schritt 1: Volle Schülerdaten -->
+        <div class="block">
+            <span class="step-num">1</span>
+            <h3>Originale Schülerdaten</h3>
+            <p class="desc">Diese Daten liegen lokal in einer Tabelle. Vollständig, mit allen sensiblen Details.</p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Adresse</th><th>Sport</th><th>Niveau</th><th>Allergien</th><th>Medikamente</th><th>Förderung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="id-cell">1</td>
+                        <td><span class="real-name">Anna Bauer</span></td>
+                        <td><span class="real-name">Lindenweg 14, Graz</span></td>
+                        <td>Ski</td><td>Fortg.</td>
+                        <td><span class="real-name">Nüsse</span></td><td>—</td>
+                        <td><span class="badge-no">Nein</span></td>
+                    </tr>
+                    <tr>
+                        <td class="id-cell">2</td>
+                        <td><span class="real-name">Lukas Huber</span></td>
+                        <td><span class="real-name">Bahnhofstr. 47, Graz</span></td>
+                        <td>Snowb.</td><td>Fortg.</td>
+                        <td>—</td><td><span class="real-name">Ritalin</span></td>
+                        <td><span class="badge-no">Nein</span></td>
+                    </tr>
+                    <tr>
+                        <td class="id-cell">3</td>
+                        <td><span class="real-name">Sophie Müller</span></td>
+                        <td><span class="real-name">Rosenstr. 8, Graz</span></td>
+                        <td>Ski</td><td>Anf.</td>
+                        <td>—</td><td>—</td>
+                        <td><span class="badge-no">Nein</span></td>
+                    </tr>
+                    <tr>
+                        <td class="id-cell">4</td>
+                        <td><span class="real-name">Yusuf Demir</span></td>
+                        <td><span class="real-name">Wienerstr. 102, Graz</span></td>
+                        <td>Alternativ</td><td>—</td>
+                        <td>—</td><td>—</td>
+                        <td><span class="badge-yes">Ja</span></td>
+                    </tr>
+                    <tr>
+                        <td class="id-cell">5</td>
+                        <td><span class="real-name">Emma Steiner</span></td>
+                        <td><span class="real-name">Gartenstr. 23, Graz</span></td>
+                        <td>Ski</td><td>Anf.</td>
+                        <td><span class="real-name">Laktose</span></td><td>—</td>
+                        <td><span class="badge-no">Nein</span></td>
+                    </tr>
+                    <tr>
+                        <td class="id-cell">6</td>
+                        <td><span class="real-name">Felix Wagner</span></td>
+                        <td><span class="real-name">Mozartg. 5, Graz</span></td>
+                        <td>Snowb.</td><td>Anf.</td>
+                        <td>—</td><td><span class="real-name">Asthma-Spray</span></td>
+                        <td><span class="badge-yes">Ja</span></td>
+                    </tr>
+                    <tr>
+                        <td class="id-cell">7</td>
+                        <td><span class="real-name">Mia Fischer</span></td>
+                        <td><span class="real-name">Schillerstr. 19, Graz</span></td>
+                        <td>Alternativ</td><td>—</td>
+                        <td>—</td><td><span class="real-name">Voltaren</span></td>
+                        <td><span class="badge-no">Nein</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+                + weitere Felder: Telefon Eltern, Notfallkontakt, Krankenkasse, Schwimmabzeichen, Helmgröße, ...
+            </p>
+        </div>
+
+        <!-- LOOKUP TABELLE -->
+        <div class="lookup-block">
+            <h3>🔑 Gemmas Lookup-Tabelle (das "Geheimwissen")</h3>
+            <p class="desc">
+                Gemma merkt sich, welche ID welcher Person zugeordnet ist. Diese Tabelle existiert
+                <strong>NUR auf deinem Rechner</strong>. Claude bekommt sie nie zu sehen — Claude sieht nur die IDs.
+            </p>
+            <table class="data-table lookup-table">
+                <thead>
+                    <tr><th style="width: 60px;">ID</th><th>Echter Name</th><th>Notfallkontakt</th><th>Sensible Hinweise</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="id-cell">1</td><td><span class="real-name">Anna Bauer</span></td><td><span class="real-name">Maria Bauer, +43 664 7654321</span></td><td><span class="real-name">Nuss-Allergie, Notfall-Pen</span></td></tr>
+                    <tr><td class="id-cell">2</td><td><span class="real-name">Lukas Huber</span></td><td><span class="real-name">Thomas Huber, +43 660 1112233</span></td><td><span class="real-name">ADHS, Ritalin morgens</span></td></tr>
+                    <tr><td class="id-cell">3</td><td><span class="real-name">Sophie Müller</span></td><td><span class="real-name">Andreas Müller, +43 699 8877665</span></td><td>—</td></tr>
+                    <tr><td class="id-cell">4</td><td><span class="real-name">Yusuf Demir</span></td><td><span class="real-name">Mehmet Demir, +43 680 2233445</span></td><td><span class="real-name">Halal, 3 Geschwister, Antrag</span></td></tr>
+                    <tr><td class="id-cell">5</td><td><span class="real-name">Emma Steiner</span></td><td><span class="real-name">Christine Steiner, +43 664 6677889</span></td><td><span class="real-name">Laktoseintoleranz</span></td></tr>
+                    <tr><td class="id-cell">6</td><td><span class="real-name">Felix Wagner</span></td><td><span class="real-name">Birgit Wagner, +43 676 9988776</span></td><td><span class="real-name">Asthma, alleinerziehend, Antrag</span></td></tr>
+                    <tr><td class="id-cell">7</td><td><span class="real-name">Mia Fischer</span></td><td><span class="real-name">Sabine Fischer, +43 699 3322110</span></td><td><span class="real-name">Knieverletzung, kein Skifahren</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Schritt 2: Anonymisierte Tabelle vorbereiten -->
+        <div class="block">
+            <span class="step-num">2</span>
+            <h3>Anonymisierte Logistik-Tabelle</h3>
+            <p class="desc">
+                Gemma erstellt eine anonyme Version. Nur die ID bleibt — alle persönlichen Felder weg.
+                Allergien werden zu Ja/Nein-Flags reduziert (nicht <em>welche</em>).
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Geschlecht</th><th>Sport</th><th>Niveau</th>
+                        <th>Größen</th><th>Hat Allergie?</th><th>Medikament tgl.?</th><th>Förderung?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="id-cell"><span class="pseudo-id">1</span></td><td>w</td><td>Ski</td><td>Fortg.</td><td>S/38</td><td><span class="badge-yes">Ja</span></td><td><span class="badge-no">Nein</span></td><td><span class="badge-no">Nein</span></td></tr>
+                    <tr><td class="id-cell"><span class="pseudo-id">2</span></td><td>m</td><td>Snowb.</td><td>Fortg.</td><td>M/41</td><td><span class="badge-no">Nein</span></td><td><span class="badge-yes">Ja</span></td><td><span class="badge-no">Nein</span></td></tr>
+                    <tr><td class="id-cell"><span class="pseudo-id">3</span></td><td>w</td><td>Ski</td><td>Anf.</td><td>S/37</td><td><span class="badge-no">Nein</span></td><td><span class="badge-no">Nein</span></td><td><span class="badge-no">Nein</span></td></tr>
+                    <tr><td class="id-cell"><span class="pseudo-id">4</span></td><td>m</td><td>Alternativ</td><td>—</td><td>—</td><td><span class="badge-no">Nein</span></td><td><span class="badge-no">Nein</span></td><td><span class="badge-yes">Ja</span></td></tr>
+                    <tr><td class="id-cell"><span class="pseudo-id">5</span></td><td>w</td><td>Ski</td><td>Anf.</td><td>S/38</td><td><span class="badge-yes">Ja</span></td><td><span class="badge-no">Nein</span></td><td><span class="badge-no">Nein</span></td></tr>
+                    <tr><td class="id-cell"><span class="pseudo-id">6</span></td><td>m</td><td>Snowb.</td><td>Anf.</td><td>M/40</td><td><span class="badge-no">Nein</span></td><td><span class="badge-yes">Ja</span></td><td><span class="badge-yes">Ja</span></td></tr>
+                    <tr><td class="id-cell"><span class="pseudo-id">7</span></td><td>w</td><td>Alternativ</td><td>—</td><td>—</td><td><span class="badge-no">Nein</span></td><td><span class="badge-yes">Ja</span></td><td><span class="badge-no">Nein</span></td></tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Diese Tabelle ist sicher — kein Name, keine Adresse, keine spezifische Allergie.
+            </p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- RECHTS: CLOUD                                     -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="lane cloud">
+        <div class="lane-header">
+            <span class="icon">☁️</span>CLOUD — Claude (Anthropic)
+        </div>
+
+        <div class="block" style="background: #f0f9ff; border-style: dashed;">
+            <span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">
+                ⏳ Noch nichts in der Cloud — Daten werden lokal vorbereitet ...
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- CROSSOVER: Daten gehen zur Cloud -->
+<div class="crossover-section to-cloud">
+    <div class="crossover-content">
+        <strong>Schritt 3: Anonyme Tabelle → Cloud</strong>
+        <small>Nur IDs, keine Identitäten</small>
+    </div>
+    <div class="crossover-arrow">→</div>
+    <div class="crossover-content">
+        <strong>Claude bekommt jetzt die anonyme Tabelle</strong>
+        <small>Plant Gruppen, Logistik, Bus</small>
+    </div>
+</div>
+
+<!-- ZWEITER LAYER: Claude arbeitet -->
+<div class="split">
+
+    <div class="lane local">
+        <div class="block" style="background: #f9fafb; border-style: dashed;">
+            <span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">
+                ⏳ Warten auf Claudes Antwort ...
+            </span>
+        </div>
+    </div>
+
+    <div class="lane cloud">
+        <!-- Schritt 4: Claude plant Gruppen -->
+        <div class="block">
+            <span class="step-num">4</span>
+            <h3>Claude bildet Gruppen</h3>
+            <p class="desc">
+                Claude sieht nur die anonyme Tabelle. Bildet 4 Gruppen, gibt sie als Tabelle zurück
+                — referenziert nur über IDs.
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Gruppe</th><th>Bezeichnung</th><th>Schüler-IDs</th><th>Begleitperson</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>A</strong></td><td>Ski Fortgeschritten</td><td><span class="pseudo-id">1</span></td><td>Skilehrer</td></tr>
+                    <tr><td><strong>B</strong></td><td>Ski Anfänger</td><td><span class="pseudo-id">3</span>, <span class="pseudo-id">5</span></td><td>Lehrperson 2</td></tr>
+                    <tr><td><strong>C</strong></td><td>Snowboard (gemischt)</td><td><span class="pseudo-id">2</span>, <span class="pseudo-id">6</span></td><td>Snowboardlehrer</td></tr>
+                    <tr><td><strong>D</strong></td><td>Alternativprogramm</td><td><span class="pseudo-id">4</span>, <span class="pseudo-id">7</span></td><td>Lehrperson 4</td></tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Anmerkung Claude: "Schüler 7 hat Bewegungseinschränkung lt. Profil — Programm anpassen."
+            </p>
+        </div>
+
+        <!-- Schritt 5: Bus + Leihausrüstung -->
+        <div class="block">
+            <span class="step-num">5</span>
+            <h3>Logistik-Pläne</h3>
+            <p class="desc">Bus-Sitzplan und Leihausrüstung — alles ohne Personenzuordnung.</p>
+
+            <p style="font-weight: 600; font-size: 0.85rem; margin-top: 0.8rem;">Leih-Ausrüstung gesamt:</p>
+            <table class="data-table compact">
+                <thead><tr><th>Artikel</th><th>Anzahl</th><th>Größen</th></tr></thead>
+                <tbody>
+                    <tr><td>Ski-Komplett</td><td>2</td><td>37, 38</td></tr>
+                    <tr><td>Ski-Helm</td><td>2</td><td>S</td></tr>
+                    <tr><td>Snowboard-Komplett</td><td>1</td><td>40</td></tr>
+                    <tr><td>Snowboard-Helm</td><td>1</td><td>M</td></tr>
+                </tbody>
+            </table>
+
+            <p style="font-weight: 600; font-size: 0.85rem; margin-top: 1rem;">Bus-Sitzplan:</p>
+            <table class="data-table compact">
+                <thead><tr><th>Reihe</th><th>Belegung</th></tr></thead>
+                <tbody>
+                    <tr><td>1-2</td><td>Lehrkräfte + Reisepro­viant</td></tr>
+                    <tr><td>3-4</td><td>Gruppe A + B (Ski)</td></tr>
+                    <tr><td>5-6</td><td>Gruppe C (Snowboard)</td></tr>
+                    <tr><td>7-8</td><td>Gruppe D (Alternativ)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- CROSSOVER: Claude antwortet zurück -->
+<div class="crossover-section from-cloud">
+    <div class="crossover-content">
+        <strong>Claudes Antwort: Tabellen mit IDs</strong>
+        <small>Keine Namen, nur Logistik-Pläne</small>
+    </div>
+    <div class="crossover-arrow">←</div>
+    <div class="crossover-content">
+        <strong>Schritt 6: Lokal mit Lookup auflösen</strong>
+        <small>IDs werden durch echte Namen ersetzt</small>
+    </div>
+</div>
+
+<!-- DRITTER LAYER: Lokal generiert Sensibles -->
+<div class="split">
+
+    <div class="lane local">
+        <!-- Schritt 7: Re-Mapping -->
+        <div class="block">
+            <span class="step-num">7</span>
+            <h3>Gruppen mit echten Namen (nach Re-Mapping)</h3>
+            <p class="desc">Lokal werden die IDs aus Claudes Tabelle über die Lookup-Tabelle aufgelöst.</p>
+            <table class="data-table">
+                <thead><tr><th>Gruppe</th><th>Sport</th><th>Schüler*innen</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><strong>A</strong></td><td>Ski Fortg.</td>
+                        <td><span class="real-name">Anna Bauer</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>B</strong></td><td>Ski Anf.</td>
+                        <td><span class="real-name">Sophie Müller</span>, <span class="real-name">Emma Steiner</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>C</strong></td><td>Snowboard</td>
+                        <td><span class="real-name">Lukas Huber</span>, <span class="real-name">Felix Wagner</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D</strong></td><td>Alternativ</td>
+                        <td><span class="real-name">Yusuf Demir</span>, <span class="real-name">Mia Fischer</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Schritt 8: Notfall-Datenblatt -->
+        <div class="block" style="border: 2px solid var(--warning);">
+            <span class="step-num" style="background: var(--warning);">8</span>
+            <h3>🚑 Notfall-Datenblatt</h3>
+            <p class="desc">
+                <strong>Komplett von Gemma lokal generiert.</strong> Claude sieht das Dokument NIE.
+                Nur für die Begleitlehrer ausgedruckt.
+            </p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>Schüler*in</th><th>Allergie</th><th>Medikament</th><th>Notfallkontakt</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="real-name">Anna Bauer</span></td>
+                        <td><span class="real-name">Nüsse (Atemnot, Pen!)</span></td>
+                        <td>—</td>
+                        <td><span class="real-name">Maria Bauer<br>+43 664 7654321</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="real-name">Lukas Huber</span></td>
+                        <td>—</td>
+                        <td><span class="real-name">Ritalin 10mg<br>tgl. morgens</span></td>
+                        <td><span class="real-name">Thomas Huber<br>+43 660 1112233</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="real-name">Emma Steiner</span></td>
+                        <td><span class="real-name">Laktoseintoleranz</span></td>
+                        <td>—</td>
+                        <td><span class="real-name">Christine Steiner<br>+43 664 6677889</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="real-name">Felix Wagner</span></td>
+                        <td>—</td>
+                        <td><span class="real-name">Asthma-Spray<br>bei Belastung</span></td>
+                        <td><span class="real-name">Birgit Wagner<br>+43 676 9988776</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="real-name">Yusuf Demir</span></td>
+                        <td><span class="real-name">Halal-Verpflegung</span></td>
+                        <td>—</td>
+                        <td><span class="real-name">Mehmet Demir<br>+43 680 2233445</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="real-name">Mia Fischer</span></td>
+                        <td><span class="real-name">Knie verletzt — kein Ski!</span></td>
+                        <td><span class="real-name">Voltaren bei Bedarf</span></td>
+                        <td><span class="real-name">Sabine Fischer<br>+43 699 3322110</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="lane cloud">
+        <div class="block" style="background: #f0f9ff; border-style: dashed;">
+            <span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">
+                ☁️ Claude ist hier nicht beteiligt — die Notfall-Datenblätter sind zu sensibel.
+                Sie werden komplett lokal von Gemma erstellt.
+            </span>
+        </div>
+        <div class="block" style="background: #f0f9ff; border-style: dashed;">
+            <span style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">
+                ☁️ Eltern-Briefe und Förderanträge: ebenfalls lokal — Claude liefert nur Vorlagen,
+                die Befüllung mit echten Daten passiert lokal.
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- ENDERGEBNIS (volle Breite) -->
+<div class="full-width-block final-output">
+    <span class="badge-actor">✨ Endergebnis für die Direktorin</span>
+    <h2>Komplettes Wintersportwoche-Paket</h2>
+    <table class="data-table" style="margin-top: 1rem;">
+        <thead>
+            <tr><th>Dokument</th><th>Erstellt von</th><th>Inhalt</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>📋 Gruppenplan</td>
+                <td>Claude (mit Re-Mapping)</td>
+                <td>4 Gruppen mit Namen</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+            <tr>
+                <td>👨‍🏫 Begleitlehrer-Plan</td>
+                <td>Claude</td>
+                <td>4 Begleitpersonen + 1 Reserve</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+            <tr>
+                <td>🚌 Bus-Sitzplan</td>
+                <td>Claude</td>
+                <td>8 Reihen aufgeteilt</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+            <tr>
+                <td>🛒 Leihausrüstung</td>
+                <td>Claude</td>
+                <td>2× Ski, 1× Snowboard</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+            <tr>
+                <td>🚑 Notfall-Datenblatt</td>
+                <td><strong>Gemma lokal</strong></td>
+                <td>Mit allen Allergien/Medikamenten</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+            <tr>
+                <td>📨 7 Eltern-Briefe</td>
+                <td><strong>Gemma lokal</strong> (mit Claude-Vorlage)</td>
+                <td>Personalisiert je Sportwahl</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+            <tr>
+                <td>💶 Förderanträge</td>
+                <td><strong>Gemma lokal</strong></td>
+                <td>2 Anträge mit Familienbegründung</td>
+                <td><span class="badge-yes" style="background:#d1fae5;color:#065f46;">Fertig</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- WER SAH WAS -->
+<section style="padding: 2rem 1.5rem;">
+    <h2 style="text-align:center; font-size: 1.6rem; margin-bottom: 0.5rem;">Welche Daten hat Claude tatsächlich gesehen?</h2>
+    <p style="text-align: center; color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem;">
+        Eine ehrliche Übersicht — wer wusste was?
+    </p>
+
+    <div class="visibility-table" style="max-width: 1000px; margin: 0 auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Datenfeld</th>
+                    <th style="text-align: center;">User</th>
+                    <th style="text-align: center;">Gemma (lokal)</th>
+                    <th style="text-align: center;">Claude (Cloud)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Vor- und Nachname</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Adresse</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Telefon Eltern</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Notfallkontakt</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Spezifische Allergien</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Medikamente</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Krankenkasse</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr><td>Familienverhältnisse</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-no">✗</td></tr>
+                <tr style="background: #f8fafc;"><td><em>Geschlecht</em></td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td></tr>
+                <tr style="background: #f8fafc;"><td><em>Sportwahl</em></td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td></tr>
+                <tr style="background: #f8fafc;"><td><em>Niveau</em></td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td></tr>
+                <tr style="background: #f8fafc;"><td><em>Schuh-/Helmgröße</em></td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td></tr>
+                <tr style="background: #f8fafc;"><td><em>"Hat Allergie?" (ja/nein)</em></td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td><td style="text-align:center;" class="check-yes">✓</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ZUSAMMENFASSUNG -->
+<div class="summary">
+    <h2>Was wir erreicht haben</h2>
+    <p style="opacity: 0.95; max-width: 700px; margin: 0 auto;">
+        Eine komplexe Verwaltungsaufgabe mit gemischter Datennutzung — DSGVO-konform.
+    </p>
+    <div class="summary-stats">
+        <div class="summary-stat">
+            <div class="num">6-8 h</div>
+            <div class="lbl">Manuelle Arbeit gespart</div>
+        </div>
+        <div class="summary-stat">
+            <div class="num">0</div>
+            <div class="lbl">Namen in der Cloud</div>
+        </div>
+        <div class="summary-stat">
+            <div class="num">0</div>
+            <div class="lbl">Allergien in der Cloud</div>
+        </div>
+        <div class="summary-stat">
+            <div class="num">100%</div>
+            <div class="lbl">DSGVO-konform</div>
+        </div>
+    </div>
+</div>
+
+<section style="text-align: center; background: var(--bg-elevated);">
+    <div class="container">
+        <h2>Mehr verstehen</h2>
+        <p class="subtitle">Detaillierte Visualisierung der Datenfluss-Logik und Sicherheitsstufen.</p>
+        <a href="flow.html" class="btn btn-primary">Datenfluss verstehen →</a>
+        <a href="index.html" class="btn btn-secondary">Zurück zum Konzept</a>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="links">
+            <a href="index.html">Konzept</a>
+            <a href="demo.html">Demo</a>
+            <a href="flow.html">Datenfluss</a>
+            <a href="https://github.com">GitHub</a>
+        </div>
+        <p>
+            <strong>private-ai-bridge</strong> — eine technische Veröffentlichung von Thomas Schroffenegger, MSc MAS BEd<br>
+            Open Source · MIT (Code) + CC BY-SA 4.0 (Konzept) · DSGVO-konform
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>
