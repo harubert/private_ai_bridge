@@ -68,10 +68,10 @@ Claude Code erkennt die `.mcp.json` automatisch. Sechs neue Tools stehen zur Ver
 
 ## Live-Demo
 
-Eine vollständige Demo mit 7 Schülern und einer realistischen Aufgabe (individuelle Zeugnisbemerkungen) gibt es als interaktive Webseite:
+Eine vollständige Demo mit 7 Schülern und einer realistischen Aufgabe (Wintersportwoche planen) gibt es als interaktive Webseite:
 
 ```bash
-cd web && python3 -m http.server 8080
+cd publish && python3 -m http.server 8080
 # Browser öffnen: http://localhost:8080
 ```
 
@@ -119,7 +119,7 @@ private_ai_bridge/
 │   ├── pseudonymizer.py     # Tagged-Token-Mapping
 │   └── audit_log.py         # DSGVO Art. 30 Logging
 ├── examples/                # Beispiel-Daten und Aufgaben
-├── web/                     # Konzept-Webseite (Landing/Demo/Flow)
+├── publish/                 # Landing Page für eigenen Server (Konzept/Demo/Flow) (Landing/Demo/Flow)
 ├── .mcp.json                # Claude-Code-Konfiguration
 └── install.sh               # Setup mit Hardware-Test
 ```
@@ -150,7 +150,7 @@ Duale Lizenzierung — siehe [LICENSE](LICENSE) für Übersicht.
 | Was | Lizenz | Datei |
 |-----|--------|-------|
 | **Code** (`server/`, `install.sh`, alle `.py`) | MIT | [LICENSE-CODE](LICENSE-CODE) |
-| **Dokumentation, Webseite, Konzept** (`README.md`, `web/`, `examples/`, alle `.md`) | CC BY-SA 4.0 | [LICENSE-DOCS](LICENSE-DOCS) |
+| **Dokumentation, Webseite, Konzept** (`README.md`, `publish/`, `examples/`, alle `.md`) | CC BY-SA 4.0 | [LICENSE-DOCS](LICENSE-DOCS) |
 
 **Beide Lizenzen verlangen Namensnennung**:
 - MIT: implizit über den Copyright-Hinweis, der in allen Kopien bleiben muss
