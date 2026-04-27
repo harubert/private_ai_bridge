@@ -413,6 +413,299 @@ cd private_ai_bridge</code></pre>
     </div>
 </section>
 
+<section id="faq">
+    <div class="container" style="max-width: 850px;">
+        <h2>Häufige Fragen</h2>
+        <p class="subtitle">
+            Ehrliche Antworten auf typische Skeptiker-Fragen.
+        </p>
+
+        <style>
+            .faq-group {
+                margin-bottom: 2rem;
+            }
+            .faq-group-title {
+                font-size: 0.78rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-weight: 700;
+                margin: 1.5rem 0 0.8rem;
+                padding-left: 0.3rem;
+            }
+            details.faq-item {
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                margin-bottom: 0.6rem;
+                transition: all 0.15s;
+            }
+            details.faq-item[open] {
+                border-color: var(--primary);
+                box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+            }
+            details.faq-item summary {
+                padding: 1rem 1.2rem;
+                font-weight: 600;
+                font-size: 0.95rem;
+                cursor: pointer;
+                list-style: none;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+            }
+            details.faq-item summary::-webkit-details-marker { display: none; }
+            details.faq-item summary::after {
+                content: "+";
+                font-size: 1.4rem;
+                color: var(--primary);
+                font-weight: 400;
+                transition: transform 0.2s;
+                flex-shrink: 0;
+            }
+            details.faq-item[open] summary::after {
+                content: "−";
+            }
+            details.faq-item .faq-answer {
+                padding: 0 1.2rem 1.2rem;
+                font-size: 0.92rem;
+                line-height: 1.65;
+                color: var(--text);
+            }
+            details.faq-item .faq-answer p {
+                margin-bottom: 0.7rem;
+            }
+            details.faq-item .faq-answer p:last-child {
+                margin-bottom: 0;
+            }
+            details.faq-item .faq-answer strong {
+                color: var(--text);
+            }
+        </style>
+
+        <!-- DATENSCHUTZ -->
+        <div class="faq-group">
+            <div class="faq-group-title">🛡️ Datenschutz &amp; Sicherheit</div>
+
+            <details class="faq-item">
+                <summary>Wie sicher ist das wirklich? Was sieht Anthropic von meinen Daten?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Anthropic sieht <strong>nur das, was die Cloud-API als Input bekommt</strong>. Wenn du das Framework nutzt, ist das per Definition die anonymisierte Version — also Geschlecht, Aggregate, Tokens wie <code>[PERS_a3f2]</code>. Niemals Klarnamen, Adressen, Allergien oder Telefonnummern.
+                    </p>
+                    <p>
+                        <strong>Wichtig:</strong> Anthropic nutzt API-Inhalte standardmäßig nicht zum Training (laut Privacy Policy). Trotzdem ist die Faustregel: gehe davon aus, dass alles, was die Cloud erreicht, theoretisch protokolliert werden könnte. Genau deshalb gibt's dieses Framework — damit nichts Sensibles erst gar nicht in die Cloud kommt.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Ist das DSGVO-konform? Habe ich damit einen Bescheid in der Tasche?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Das Framework ist <strong>DSGVO-konform konstruiert</strong> ("Privacy by Design", DSGVO Art. 25). Es unterstützt zentrale Anforderungen:
+                    </p>
+                    <p>
+                        <strong>Art. 5</strong> Datenminimierung · <strong>Art. 25</strong> Datenschutz durch Technikgestaltung · <strong>Art. 30</strong> Verarbeitungsverzeichnis (Audit-Log) · <strong>Art. 32</strong> Sicherheit der Verarbeitung · <strong>Art. 17</strong> Recht auf Löschung
+                    </p>
+                    <p>
+                        <strong>Aber:</strong> "DSGVO-konformes Tool" ≠ "Bescheid". Du brauchst trotzdem eigene Datenschutz-Folgenabschätzung, Verarbeitungsverzeichnis, ggf. Einwilligungen. Das Framework macht den technischen Teil — die organisatorischen Pflichten bleiben bei dir bzw. dem Datenschutzbeauftragten.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Was passiert, wenn jemand die Lookup-Tabelle auf meinem Rechner findet?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Die Lookup-Tabelle (Zuordnung Token → Klarname) liegt unter <code>~/.private-ai-bridge/lookup.json</code>. Bei physischem Zugriff auf deinen entsperrten Rechner kann sie gelesen werden — wie jede andere Datei.
+                    </p>
+                    <p>
+                        <strong>Schutzmaßnahmen:</strong> Festplattenverschlüsselung (FileVault auf Mac, BitLocker auf Windows, LUKS auf Linux) ist sowieso Pflicht für Geräte mit personenbezogenen Daten. Damit ist die Lookup-Tabelle bei verlorenen/gestohlenen Geräten sicher.
+                    </p>
+                    <p>
+                        Optional: <code>clear_mappings()</code> löscht alle Zuordnungen, wenn sie nicht mehr gebraucht werden (Recht auf Löschung, DSGVO Art. 17).
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Wie kann ich überprüfen, dass wirklich nichts Sensibles rausgeht?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Drei Mechanismen:
+                    </p>
+                    <p>
+                        <strong>1. Audit-Log</strong> — jede Tool-Verwendung wird in <code>~/.private-ai-bridge/audit.log</code> protokolliert (Zeitstempel, Tool, Datenkategorien). Lesbar mit <code>show_audit_log</code>.
+                    </p>
+                    <p>
+                        <strong>2. Leak-Detector</strong> — Gemmas Output wird vor Übergabe an Claude gegen die Lookup-Tabelle geprüft. Findet er einen bekannten Klarnamen, blockiert er die Übertragung.
+                    </p>
+                    <p>
+                        <strong>3. Open Source</strong> — der gesamte Code ist auf GitHub einsehbar. Du kannst (oder dein IT-Audit) den Datenfluss exakt nachvollziehen.
+                    </p>
+                </div>
+            </details>
+        </div>
+
+        <!-- TECHNIK -->
+        <div class="faq-group">
+            <div class="faq-group-title">⚙️ Technik</div>
+
+            <details class="faq-item">
+                <summary>Brauche ich einen API-Account bei Anthropic?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Nein. Das Framework läuft mit <strong>Claude Code</strong> — und das ist im Claude-Pro-Abo ($20/Mo) bzw. Claude-Max-Abo enthalten. Kein separater API-Account, keine API-Credits, keine unvorhersehbaren Rechnungen.
+                    </p>
+                    <p>
+                        Für Schulen besonders relevant: <strong>kalkulierbare Fixkosten</strong>. Ein Max-5×-Abo ($100/Mo) reicht für intensive Nutzung durch eine Verwaltungsstelle.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Funktioniert das auch mit anderen LLMs als Gemma? (Llama, Mistral, ...)</summary>
+                <div class="faq-answer">
+                    <p>
+                        Ja — solange das Modell über <a href="https://ollama.com">Ollama</a> verfügbar ist. Setze einfach eine Umgebungsvariable:
+                    </p>
+                    <p>
+                        <code>export PRIVATE_AI_BRIDGE_MODEL="llama3.2:3b"</code>
+                    </p>
+                    <p>
+                        Empfohlene Alternativen: <code>llama3.2:3b</code>, <code>mistral:7b</code>, <code>qwen2.5:7b</code>, <code>phi3:mini</code>. Gemma 4 ist die aktuelle Empfehlung wegen guter Balance aus Qualität, Geschwindigkeit und RAM-Bedarf.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Was passiert ohne Internet?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Die <strong>lokale Komponente (Gemma) funktioniert komplett offline</strong> — du kannst sensible Daten lokal verarbeiten, anonymisieren, Notfall-Datenblätter generieren etc.
+                    </p>
+                    <p>
+                        Die <strong>Cloud-Komponente (Claude)</strong> braucht naturgemäß Internet. Bei Internetausfall steht dir die volle lokale Funktionalität zur Verfügung — nur die kreativ-strategischen Aufgaben sind dann nicht möglich.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Wie aktualisiere ich das System?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Für Code-Updates: <code>cd private_ai_bridge && git pull</code>. Für neue Modellversionen: <code>ollama pull gemma4:e4b</code>.
+                    </p>
+                    <p>
+                        Beides ändert nichts an deiner lokalen Lookup-Tabelle oder deinen Daten — die liegen separat in <code>~/.private-ai-bridge/</code>.
+                    </p>
+                </div>
+            </details>
+        </div>
+
+        <!-- PRAXIS -->
+        <div class="faq-group">
+            <div class="faq-group-title">📋 Praxis</div>
+
+            <details class="faq-item">
+                <summary>Können mehrere Personen gleichzeitig damit arbeiten?</summary>
+                <div class="faq-answer">
+                    <p>
+                        In der aktuellen Version: <strong>nein</strong>. Das Framework ist für Single-User-Nutzung gedacht — typisch ein Verwaltungs-PC mit dem Direktor / Sekretariat als Nutzer.
+                    </p>
+                    <p>
+                        Für Multi-User-Setups (mehrere Lehrkräfte gleichzeitig) wäre eine zentrale Server-Installation nötig — das ist im aktuellen Framework nicht vorgesehen, aber technisch möglich. Pull Requests willkommen.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Wie sichere ich die Lookup-Tabelle (Backup)?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Die Lookup-Tabelle ist eine einfache JSON-Datei unter <code>~/.private-ai-bridge/lookup.json</code>. Standard-Backup-Mechanismen funktionieren:
+                    </p>
+                    <p>
+                        <strong>macOS:</strong> Time Machine sichert sie automatisch mit. <strong>Linux:</strong> rsync, Borg, restic. <strong>Windows:</strong> File History.
+                    </p>
+                    <p>
+                        Wichtig: das Backup-Medium ebenfalls verschlüsseln — die Lookup-Tabelle enthält Klarnamen!
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Kann ich Claude auch für Aufgaben nutzen, bei denen gar keine Personendaten dabei sind?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Selbstverständlich — Claude Code funktioniert ja unabhängig vom Framework genauso wie immer. Ohne sensible Daten ruft es einfach das gemma_query-Tool nicht auf, sondern arbeitet direkt.
+                    </p>
+                    <p>
+                        Beispiele: Förderanträge ohne Personenbezug, allgemeine Recherche, Code für die Schulwebsite, Konzepte erarbeiten, Berichte aus Statistiken etc.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Wer haftet, wenn doch was schiefgeht?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Das Framework ist Open Source unter MIT-Lizenz und wird "wie besehen" zur Verfügung gestellt — <strong>ohne Gewährleistung</strong>. Das ist Standard bei Open Source und auch bei kommerzieller Software (siehe AGB).
+                    </p>
+                    <p>
+                        In der Praxis bedeutet das: Verantwortlich für DSGVO-konformen Einsatz ist die Schule bzw. der Schulträger. Das Framework ist ein Werkzeug, das den technischen Teil sehr stark erleichtert — aber organisatorisch musst du den Einsatz korrekt aufsetzen (Verarbeitungsverzeichnis, ggf. DSFA, Schulung des Personals).
+                    </p>
+                    <p>
+                        Empfehlung: vor produktivem Einsatz mit dem zuständigen Datenschutzbeauftragten abstimmen.
+                    </p>
+                </div>
+            </details>
+        </div>
+
+        <!-- VERTRAUEN -->
+        <div class="faq-group">
+            <div class="faq-group-title">🤝 Vertrauen</div>
+
+            <details class="faq-item">
+                <summary>Warum sollte ich diesem Projekt vertrauen?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Drei Argumente:
+                    </p>
+                    <p>
+                        <strong>1. Open Source</strong> — der gesamte Code ist auf <a href="https://github.com/harubert/private_ai_bridge">GitHub</a> einsehbar. Keine Black Box. Du (oder ein IT-Audit) könnt Zeile für Zeile prüfen, was passiert.
+                    </p>
+                    <p>
+                        <strong>2. Lokale Verifikation</strong> — du musst nicht uns glauben. Schau ins Audit-Log, beobachte den Netzwerkverkehr (Wireshark zeigt was zur Cloud geht), prüfe was Claude im Chat-Verlauf gesehen hat.
+                    </p>
+                    <p>
+                        <strong>3. Konkreter Autor</strong> — Thomas Schroffenegger, MSc MAS BEd, ist als Verantwortlicher namentlich genannt. Kein anonymes Projekt.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary>Was, wenn das Projekt eingestellt wird oder der Autor ausfällt?</summary>
+                <div class="faq-answer">
+                    <p>
+                        Open Source bedeutet: <strong>der Code gehört der Community</strong>. Solange jemand das Repository forkt, lebt es weiter. Du selbst kannst jederzeit einen Fork machen.
+                    </p>
+                    <p>
+                        Auch ohne weitere Updates funktioniert die aktuelle Version weiter — Gemma, Ollama, Claude Code sind etablierte Komponenten, die unabhängig gepflegt werden.
+                    </p>
+                </div>
+            </details>
+        </div>
+
+        <!-- Bottom-Hinweis -->
+        <div style="text-align: center; padding: 1.5rem; background: var(--bg-elevated); border-radius: 8px; margin-top: 2rem; font-size: 0.9rem; color: var(--text-muted);">
+            Frage hier nicht beantwortet? <a href="https://github.com/harubert/private_ai_bridge/issues">Issue auf GitHub eröffnen</a>.
+        </div>
+    </div>
+</section>
+
 <section style="background: var(--bg-elevated);">
     <div class="container" style="max-width: 800px;">
         <h2>Über dieses Projekt</h2>
