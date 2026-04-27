@@ -240,6 +240,143 @@
     </div>
 </section>
 
+<section id="hardware">
+    <div class="container">
+        <h2>Was brauche ich?</h2>
+        <p class="subtitle">
+            Hardware-Anforderungen und realistische Performance-Erwartungen für deine Planung.
+        </p>
+
+        <!-- Hardware-Tabelle -->
+        <div style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; overflow-x: auto;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">🖥️ Lokale Hardware (für Gemma)</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--border);">
+                        <th style="text-align: left; padding: 0.6rem; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">Modell</th>
+                        <th style="text-align: left; padding: 0.6rem; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">Min. RAM</th>
+                        <th style="text-align: left; padding: 0.6rem; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">Empfohlen</th>
+                        <th style="text-align: left; padding: 0.6rem; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">Geschwindigkeit</th>
+                        <th style="text-align: left; padding: 0.6rem; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px;">Eignung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 0.7rem 0.6rem;"><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 0.85em;">gemma:2b</code></td>
+                        <td style="padding: 0.7rem 0.6rem;">8 GB</td>
+                        <td style="padding: 0.7rem 0.6rem;">12 GB</td>
+                        <td style="padding: 0.7rem 0.6rem;">~25 tok/s</td>
+                        <td style="padding: 0.7rem 0.6rem; color: var(--text-muted);">Einfache Filterung, kleine Datenmengen</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f1f5f9; background: var(--local-light);">
+                        <td style="padding: 0.7rem 0.6rem;"><code style="background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 3px; font-size: 0.85em;">gemma4:e4b</code> <span style="background: var(--local); color: white; font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 3px; margin-left: 0.3rem; font-weight: 700;">EMPFOHLEN</span></td>
+                        <td style="padding: 0.7rem 0.6rem;">12 GB</td>
+                        <td style="padding: 0.7rem 0.6rem;"><strong>16 GB</strong></td>
+                        <td style="padding: 0.7rem 0.6rem;">~12 tok/s</td>
+                        <td style="padding: 0.7rem 0.6rem; color: var(--text-muted);">Optimale Balance für Schul-Verwaltungsaufgaben</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 0.7rem 0.6rem;"><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 0.85em;">gemma4:26b-a4b</code></td>
+                        <td style="padding: 0.7rem 0.6rem;">24 GB</td>
+                        <td style="padding: 0.7rem 0.6rem;">32 GB</td>
+                        <td style="padding: 0.7rem 0.6rem;">~8 tok/s</td>
+                        <td style="padding: 0.7rem 0.6rem; color: var(--text-muted);">Längere Texte, anspruchsvolle Aufgaben</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">
+                Geschwindigkeitsangaben sind Richtwerte für Apple M-Serie. Auf Intel/AMD-CPUs ohne dedizierte GPU
+                etwa 2-3× langsamer. Mit Nvidia-GPU (CUDA) deutlich schneller.
+            </p>
+        </div>
+
+        <!-- Praxis-Beispiele -->
+        <div style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">⏱️ Was bedeutet das in der Praxis?</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+                <div style="background: var(--bg); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid var(--local);">
+                    <strong style="font-size: 0.9rem;">Wintersportwoche-Demo</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
+                        7 Schüler verarbeiten + Notfalldatenblatt + 7 Eltern-Briefe lokal generieren:
+                        <strong style="color: var(--text);">~30 Sekunden</strong> auf einem M2 mit 16 GB.
+                    </p>
+                </div>
+                <div style="background: var(--bg); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid var(--local);">
+                    <strong style="font-size: 0.9rem;">Anonymisierung 300-Schüler-Liste</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
+                        Aggregate, Statistiken, anonymisiertes Klassen-Profil:
+                        <strong style="color: var(--text);">~15 Sekunden</strong>.
+                    </p>
+                </div>
+                <div style="background: var(--bg); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid var(--local);">
+                    <strong style="font-size: 0.9rem;">PII-Erkennung in 1-Seiten-Text</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
+                        Namen, Emails, Adressen finden und mit Tokens ersetzen:
+                        <strong style="color: var(--text);">~3 Sekunden</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Was ist sonst noch nötig -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0;">
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.6rem;">💻 Betriebssystem</h3>
+                <ul style="list-style: none; font-size: 0.88rem; color: var(--text-muted); line-height: 1.8;">
+                    <li>✓ macOS 12+ (Apple Silicon empfohlen)</li>
+                    <li>✓ Linux (Ubuntu, Debian, Fedora ...)</li>
+                    <li>✓ Windows 10/11 (über WSL2)</li>
+                </ul>
+            </div>
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.6rem;">🔧 Software-Voraussetzungen</h3>
+                <ul style="list-style: none; font-size: 0.88rem; color: var(--text-muted); line-height: 1.8;">
+                    <li>✓ Python 3.10+</li>
+                    <li>✓ <a href="https://ollama.com" style="color: var(--primary);">Ollama</a> (Installer macht das)</li>
+                    <li>✓ <a href="https://docs.claude.com/en/docs/claude-code" style="color: var(--primary);">Claude Code</a> (Anthropic CLI)</li>
+                </ul>
+            </div>
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.6rem;">☁️ Cloud-Komponente</h3>
+                <ul style="list-style: none; font-size: 0.88rem; color: var(--text-muted); line-height: 1.8;">
+                    <li>✓ <strong>Claude Pro</strong> ($20/Mo) für moderate Nutzung</li>
+                    <li>✓ <strong>Claude Max 5×</strong> ($100/Mo) für Schulen</li>
+                    <li>✓ Kein API-Account nötig — über Claude Code Abo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Speicherplatz -->
+        <div style="background: var(--warning-light); border: 1px solid var(--warning); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.5rem 0; font-size: 0.9rem;">
+            <strong>💾 Speicherplatz:</strong> Gemma-Modelle brauchen Platz auf der SSD —
+            <code>gemma:2b</code> ca. 2 GB, <code>gemma4:e4b</code> ca. 6 GB,
+            <code>gemma4:26b-a4b</code> ca. 16 GB. Das Modell wird einmalig heruntergeladen
+            und bleibt lokal gespeichert.
+        </div>
+
+        <!-- Was passiert auf alter Hardware -->
+        <div style="background: var(--bg-elevated); border-left: 4px solid var(--primary); border-radius: 8px; padding: 1.2rem 1.5rem; margin-top: 2rem;">
+            <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">🤔 Was, wenn meine Schule nur alte Geräte hat?</h3>
+            <p style="font-size: 0.9rem; line-height: 1.6;">
+                Auf einem Windows-PC mit <strong>8 GB RAM und Intel-Prozessor</strong> läuft <code>gemma:2b</code>
+                — langsamer (eine Wintersportwoche-Aufgabe dauert dann eher 2-3 Minuten statt 30 Sekunden), aber funktioniert.
+                Für gelegentliche Nutzung absolut akzeptabel.
+            </p>
+            <p style="font-size: 0.9rem; line-height: 1.6; margin-top: 0.6rem;">
+                <strong>Empfehlung für Schulen ohne moderne Hardware:</strong> Ein einzelner Verwaltungs-PC
+                mit 16 GB RAM (~€800 Anschaffung) reicht für die ganze Schule — das Modell läuft auf einem Rechner,
+                Claude Code wird darauf bedient.
+            </p>
+        </div>
+
+        <!-- Hardware-Test im Installer -->
+        <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: var(--bg-elevated); border-radius: 8px; font-size: 0.9rem; color: var(--text-muted);">
+            💡 Der <code>install.sh</code> erkennt deine Hardware automatisch und schlägt das passende Modell vor —
+            du musst diese Tabelle nicht im Kopf haben.
+        </div>
+    </div>
+</section>
+
 <section style="background: var(--bg-elevated);">
     <div class="container">
         <h2>Schnellstart</h2>
