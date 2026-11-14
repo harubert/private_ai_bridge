@@ -1,5 +1,7 @@
 # private-ai-bridge
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24218601.svg)](https://doi.org/10.5281/zenodo.24218601)
+
 > **Sensible Daten lokal verarbeiten — Cloud-KI nutzen ohne Datenleck**
 
 Ein Framework für [Claude Code](https://docs.claude.com/en/docs/claude-code), das personenbezogene Daten ausschließlich auf deinem Rechner verarbeitet. Lokales LLM (Gemma 4 via Ollama) bleibt Wächter — Claude bekommt nur anonymisierte Aggregate.
