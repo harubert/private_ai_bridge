@@ -11,10 +11,10 @@
       "plz": "8010",
       "ort": "Graz"
     },
-    "email": "anna.bauer@beispielschule.at",
+    "email": "anna.bauer@schule.example.org",
     "telefon_eltern": "+43 664 7654321",
     "erziehungsberechtigte": [
-      {"name": "Maria Bauer", "telefon": "+43 664 7654321", "email": "maria.bauer@gmail.com"}
+      {"name": "Maria Bauer", "telefon": "+43 664 7654321", "email": "maria.bauer@example.org"}
     ],
     "wintersport": {
       "sportwahl": "ski",
@@ -47,11 +47,11 @@
       "plz": "8020",
       "ort": "Graz"
     },
-    "email": "lukas.huber@beispielschule.at",
+    "email": "lukas.huber@schule.example.org",
     "telefon_eltern": "+43 660 1112233",
     "erziehungsberechtigte": [
-      {"name": "Thomas Huber", "telefon": "+43 660 1112233", "email": "thomas.huber@gmx.at"},
-      {"name": "Stefanie Huber", "telefon": "+43 676 4445566", "email": "stefanie.huber@gmx.at"}
+      {"name": "Thomas Huber", "telefon": "+43 660 1112233", "email": "thomas.huber@example.org"},
+      {"name": "Stefanie Huber", "telefon": "+43 676 4445566", "email": "stefanie.huber@example.org"}
     ],
     "wintersport": {
       "sportwahl": "snowboard",
@@ -84,10 +84,10 @@
       "plz": "8041",
       "ort": "Graz"
     },
-    "email": "sophie.mueller@beispielschule.at",
+    "email": "sophie.mueller@schule.example.org",
     "telefon_eltern": "+43 699 5544332",
     "erziehungsberechtigte": [
-      {"name": "Andreas Müller", "telefon": "+43 699 8877665", "email": "a.mueller@aon.at"}
+      {"name": "Andreas Müller", "telefon": "+43 699 8877665", "email": "a.mueller@example.org"}
     ],
     "wintersport": {
       "sportwahl": "ski",
@@ -121,10 +121,10 @@
       "plz": "8020",
       "ort": "Graz"
     },
-    "email": "yusuf.demir@beispielschule.at",
+    "email": "yusuf.demir@schule.example.org",
     "telefon_eltern": "+43 680 2233445",
     "erziehungsberechtigte": [
-      {"name": "Mehmet Demir", "telefon": "+43 680 2233445", "email": "m.demir@outlook.com"}
+      {"name": "Mehmet Demir", "telefon": "+43 680 2233445", "email": "m.demir@example.org"}
     ],
     "wintersport": {
       "sportwahl": "alternativ",
@@ -157,11 +157,11 @@
       "plz": "8010",
       "ort": "Graz"
     },
-    "email": "emma.steiner@beispielschule.at",
+    "email": "emma.steiner@schule.example.org",
     "telefon_eltern": "+43 664 6677889",
     "erziehungsberechtigte": [
-      {"name": "Christine Steiner", "telefon": "+43 664 6677889", "email": "christine.steiner@gmail.com"},
-      {"name": "Markus Steiner", "telefon": "+43 660 5566778", "email": "markus.steiner@gmail.com"}
+      {"name": "Christine Steiner", "telefon": "+43 664 6677889", "email": "christine.steiner@example.org"},
+      {"name": "Markus Steiner", "telefon": "+43 660 5566778", "email": "markus.steiner@example.org"}
     ],
     "wintersport": {
       "sportwahl": "ski",
@@ -195,10 +195,10 @@
       "plz": "8042",
       "ort": "Graz-Andritz"
     },
-    "email": "felix.wagner@beispielschule.at",
+    "email": "felix.wagner@schule.example.org",
     "telefon_eltern": "+43 676 9988776",
     "erziehungsberechtigte": [
-      {"name": "Birgit Wagner", "telefon": "+43 676 9988776", "email": "birgit.wagner@gmx.at"}
+      {"name": "Birgit Wagner", "telefon": "+43 676 9988776", "email": "birgit.wagner@example.org"}
     ],
     "wintersport": {
       "sportwahl": "snowboard",
@@ -233,10 +233,10 @@
       "plz": "8045",
       "ort": "Graz-Puntigam"
     },
-    "email": "mia.fischer@beispielschule.at",
+    "email": "mia.fischer@schule.example.org",
     "telefon_eltern": "+43 699 3322110",
     "erziehungsberechtigte": [
-      {"name": "Sabine Fischer", "telefon": "+43 699 3322110", "email": "sabine.fischer@aon.at"}
+      {"name": "Sabine Fischer", "telefon": "+43 699 3322110", "email": "sabine.fischer@example.org"}
     ],
     "wintersport": {
       "sportwahl": "alternativ",

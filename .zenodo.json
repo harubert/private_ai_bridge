@@ -1,0 +1,23 @@
+{
+  "title": "Private AI Bridge: GDPR-compliant use of cloud AI with local data filtering",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Schroffenegger, Thomas",
+      "affiliation": "Pädagogische Hochschule Vorarlberg",
+      "orcid": "0000-0002-3224-2384"
+    }
+  ],
+  "description": "GDPR-compliant framework for cloud-based AI with local data filtering. Personal data remains on your device; Claude only receives anonymized aggregates. Code under the MIT License (LICENSE-CODE); documentation, website and example data under CC BY-SA 4.0 (LICENSE-DOCS). The example data are fictitious.",
+  "keywords": [
+    "data protection",
+    "GDPR",
+    "pseudonymization",
+    "large language models",
+    "education",
+    "Claude Code"
+  ],
+  "version": "1.0.0"
+}

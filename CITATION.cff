@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Private AI Bridge: GDPR-compliant use of cloud AI with local data filtering"
+authors:
+  - family-names: Schroffenegger
+    given-names: Thomas
+    affiliation: "Pädagogische Hochschule Vorarlberg"
+    orcid: "https://orcid.org/0000-0002-3224-2384"
+version: "1.0.0"
+date-released: "2026-11-14"
+license: MIT
+repository-code: "https://github.com/harubert/private_ai_bridge"
+abstract: >-
+  GDPR-compliant framework for cloud-based AI with local data filtering. Personal data remains on your device; Claude only receives anonymized aggregates. Code under the MIT License (LICENSE-CODE); documentation, website and example data under CC BY-SA 4.0 (LICENSE-DOCS). The example data are fictitious.
+keywords:
+  - data protection
+  - GDPR
+  - pseudonymization
+  - large language models
+  - education
+  - Claude Code

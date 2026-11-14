@@ -84,6 +84,8 @@ Drei Seiten:
 
 Datei: `examples/schueler/schueler.json` (7 Schüler mit Sportwahl, Allergien, Medikamenten, Sozialermäßigungen)
 
+> **Fiktive Testdaten.** Alle Personen, Adressen, Telefonnummern, Gesundheits- und Familienangaben in `examples/schueler/schueler.json` sind frei erfunden und dienen nur zum Testen. Ähnlichkeiten mit realen Personen sind zufällig. Die E-Mail-Adressen verwenden die dafür reservierte Domain `example.org`.
+
 User-Prompt an Claude:
 > "Plane die Wintersportwoche der 3a — Gruppen nach Sportwahl/Niveau, Begleitlehrer, Bus-Sitzplan, Notfall-Datenblätter, individuelle Eltern-Briefe und Förderanträge."
 
